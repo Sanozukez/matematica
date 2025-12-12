@@ -28,8 +28,6 @@ class LafilyBlockEditor {
         this.loadBlockInserts();
         this.setupResponsive();
         this.setupTabs();
-        this.syncThemeToggle();
-        this.setupUserMenu();
         
         console.log('[Lafily] Block Editor pronto!');
     }
@@ -65,19 +63,7 @@ class LafilyBlockEditor {
             btn.addEventListener('click', (e) => this.toggleSidebar(e));
         });
 
-        // Theme toggle
-        if (this.elements.themeToggle) {
-            this.elements.themeToggle.addEventListener('click', () => this.toggleTheme());
-        }
-
-        // User menu theme buttons
-        if (this.elements.userMenuButtons && this.elements.userMenuButtons.length) {
-            this.elements.userMenuButtons.forEach(btn => {
-                btn.addEventListener('click', () => {
-                    this.applyTheme(btn.dataset.theme);
-                });
-            });
-        }
+        // Theme toggle disabled in Lafily (delegated to platform)
 
         // Settings tabs
         this.elements.settingsTabs.forEach(tab => {
@@ -246,57 +232,6 @@ class LafilyBlockEditor {
             // Mobile/tablet: esconder sidebars por padrão
             this.elements.inserter.classList.remove('visible');
             this.elements.settings.classList.remove('visible');
-        }
-    }
-
-    /**
-     * Ajusta ícone do tema no carregamento
-     */
-    syncThemeToggle() {
-        const root = document.documentElement;
-        const isDark = root.classList.contains('theme-dark');
-        if (this.elements.themeToggle) {
-            this.elements.themeToggle.classList.toggle('is-dark', isDark);
-            this.elements.themeToggle.setAttribute('aria-pressed', isDark ? 'true' : 'false');
-        }
-    }
-
-    /**
-     * Alterna tema claro/escuro local ao editor
-     */
-    toggleTheme() {
-        const root = document.documentElement;
-        const isDark = root.classList.toggle('theme-dark');
-
-        if (this.elements.themeToggle) {
-            this.elements.themeToggle.setAttribute('aria-pressed', isDark ? 'true' : 'false');
-            this.elements.themeToggle.classList.toggle('is-dark', isDark);
-        }
-
-        localStorage.setItem('lafily-theme', isDark ? 'dark' : 'light');
-    }
-
-    applyTheme(mode) {
-        const root = document.documentElement;
-        root.classList.remove('theme-dark');
-        if (mode === 'dark') root.classList.add('theme-dark');
-        if (mode === 'system') {
-            root.classList.remove('theme-dark');
-            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-            if (prefersDark) root.classList.add('theme-dark');
-        }
-        localStorage.setItem('lafily-theme', mode);
-        if (this.elements.themeToggle) {
-            const isDark = root.classList.contains('theme-dark');
-            this.elements.themeToggle.classList.toggle('is-dark', isDark);
-            this.elements.themeToggle.setAttribute('aria-pressed', isDark ? 'true' : 'false');
-        }
-    }
-
-    setupUserMenu() {
-        const saved = localStorage.getItem('lafily-theme');
-        if (saved) {
-            this.applyTheme(saved);
         }
     }
 

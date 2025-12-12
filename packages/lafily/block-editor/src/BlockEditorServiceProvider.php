@@ -28,23 +28,25 @@ class BlockEditorServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        $viewPath = __DIR__ . '/../resources/views';
+        
+        // Load views with namespace
+        $this->loadViewsFrom($viewPath, 'block-editor');
+
         // Publish config
         $this->publishes([
             __DIR__ . '/../config/block-editor.php' => config_path('block-editor.php'),
         ], 'block-editor-config');
 
-        // Load views
-        $this->loadViewsFrom(__DIR__ . '/../resources/views', 'block-editor');
-
         // Publish views
         $this->publishes([
-            __DIR__ . '/../resources/views' => resource_path('views/vendor/block-editor'),
+            $viewPath => resource_path('views/vendor/block-editor'),
         ], 'block-editor-views');
 
-        // Publish assets
+        // Publish assets (CSS/JS)
         $this->publishes([
             __DIR__ . '/../resources/css' => public_path('vendor/block-editor/css'),
             __DIR__ . '/../resources/js' => public_path('vendor/block-editor/js'),
-        ], 'block-editor-assets');
+        ], ['block-editor-assets', 'laravel-assets']);
     }
 }

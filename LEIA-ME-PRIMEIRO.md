@@ -111,14 +111,18 @@ FORWARD_DB_PORT=3307   # Porta para acessar MySQL do seu PC
 
 ### 3️⃣ Construir a Imagem (Primeira Vez APENAS)
 
-Na **primeira execução**, construa a imagem Docker:
+⚠️ **ATENÇÃO:** Execute este comando **APENAS na primeira vez** que for rodar o projeto em um computador novo.
 
 ```powershell
 cd plataforma
-docker compose build
+docker compose up -d --build
 ```
 
-⏱️ **Isso pode levar 5-10 minutos.** Aguarde até aparecer `Successfully tagged ...`
+⏱️ **Isso pode levar 5-10 minutos.** Aguarde até aparecer todos os containers "Up".
+
+**❌ NUNCA execute `docker compose build` sozinho!** Sempre use `docker compose up -d --build` na primeira vez.
+
+**DEPOIS DA PRIMEIRA VEZ:** Use apenas `docker compose up -d` (sem `--build`).
 
 ---
 
@@ -282,6 +286,83 @@ docker compose exec -T mysql mysql -u root -pmatematica2024 laravel < backup.sql
 
 ---
 
+## ⚠️ IMPORTANTE: O QUE NUNCA FAZER
+
+### 🚫 NUNCA Execute Estes Comandos
+
+Estes comandos podem **quebrar completamente** o ambiente Docker e fazer você perder horas reconstruindo:
+
+#### ❌ NUNCA: `docker compose build`
+
+**POR QUÊ:** Este projeto usa uma imagem pré-construída do Laravel Sail (`sail-8.4/app`). O comando `build` pode reconstruir a imagem de forma incorreta, criando um container sem servidor web (nginx), resultando em um Laravel que **sobe mas não responde**.
+
+**O QUE ACONTECE:**
+- Container inicia normalmente (`docker compose ps` mostra "Up")
+- Porta 8005 fica mapeada
+- Mas http://localhost:8005 não carrega (conexão recusada)
+- PHP-FPM roda, mas falta o nginx para servir as páginas
+
+**SE VOCÊ FEZ ISSO POR ENGANO:**
+```powershell
+# 1. Pare tudo
+docker compose down
+
+# 2. Delete a imagem quebrada
+docker rmi laravel-app:latest
+
+# 3. Reconstrua CORRETAMENTE
+docker compose up -d --build
+
+# 4. Aguarde 30-60 segundos e teste http://localhost:8005
+```
+
+#### ❌ NUNCA: `docker compose down -v`
+
+**POR QUÊ:** O `-v` **deleta TODOS os volumes**, incluindo o banco de dados MySQL. Você perde:
+- Todos os usuários criados
+- Todas as lições
+- Todo o conteúdo
+- Configurações de permissões
+
+**USE APENAS:** `docker compose down` (sem `-v`)
+
+#### ❌ NUNCA: Deletar `docker-data/`
+
+**POR QUÊ:** Esta pasta contém os dados persistentes do MySQL e Redis. Deletá-la = perder todo o banco de dados.
+
+**SE DELETOU:** Você precisará refazer as migrations e seeders do zero.
+
+#### ❌ NUNCA: Editar `docker-compose.yml` sem backup
+
+**POR QUÊ:** O arquivo está configurado corretamente. Mudanças podem quebrar:
+- Mapeamento de volumes (código não sincroniza)
+- Portas (conflito ou inacessível)
+- Build context (imagem quebrada)
+
+**ANTES DE EDITAR:**
+```powershell
+# Faça backup
+copy docker-compose.yml docker-compose.yml.backup
+```
+
+#### ❌ NUNCA: Mudar `DB_HOST` no `.env` para `localhost`
+
+**POR QUÊ:** Dentro do Docker, os serviços se comunicam por **nome do serviço**, não `localhost`.
+
+**CORRETO:**
+```dotenv
+DB_HOST=mysql        # Nome do serviço no docker-compose.yml
+REDIS_HOST=redis     # Nome do serviço no docker-compose.yml
+```
+
+**ERRADO:**
+```dotenv
+DB_HOST=localhost    # ❌ Não funciona dentro do Docker
+DB_HOST=127.0.0.1    # ❌ Não funciona dentro do Docker
+```
+
+---
+
 ## Troubleshooting
 
 ### ❌ Porta 8005 Já em Uso
@@ -314,18 +395,62 @@ docker compose logs mysql | tail -20
 
 **Problema:** http://localhost:8005 não carrega.
 
-**Solução:**
+**Possíveis Causas:**
+
+**1. Container não está rodando:**
 ```powershell
-# 1. Verifique se está rodando
+# Verifique status
 docker compose ps
 
-# 2. Se não estiver, inicie
+# Se não estiver "Up", inicie
 docker compose up -d
 
-# 3. Aguarde 30 segundos e tente novamente
+# Aguarde 30 segundos e tente novamente
+```
 
-# 4. Verifique logs
+**2. Container subiu mas sem servidor web (você rodou `docker compose build` por engano):**
+
+**SINTOMAS:**
+- `docker compose ps` mostra "Up"
+- Porta 8005 mapeada corretamente
+- http://localhost:8005 dá "conexão recusada"
+- Dentro do container só roda `php-fpm` (sem nginx)
+
+**SOLUÇÃO COMPLETA:**
+```powershell
+# 1. Pare containers
+docker compose down
+
+# 2. Verifique se docker-compose.yml tem isto:
+#    laravel.test:
+#        build:
+#            context: .
+#            dockerfile: Dockerfile.dev
+#        volumes:
+#            - .:/var/www/html:cached
+#
+# Se tiver "image: laravel-app:latest" em vez de "build:", EDITE para usar build!
+
+# 3. Reconstrua a imagem corretamente
+docker compose up -d --build
+
+# 4. Aguarde 60 segundos
+
+# 5. Teste
+curl http://localhost:8005 -UseBasicParsing
+
+# Se retornar HTML, está funcionando!
+```
+
+**3. Verificar logs:**
+```powershell
+# Veja os últimos 50 logs
 docker compose logs laravel.test | tail -50
+
+# Se aparecer apenas "php-fpm: ready to handle connections" SEM nada sobre nginx,
+# você precisa reconstruir (veja solução acima)
+
+# Se aparecer erros do Laravel, leia a mensagem e corrija
 ```
 
 ### ❌ Código Não Atualiza no Container

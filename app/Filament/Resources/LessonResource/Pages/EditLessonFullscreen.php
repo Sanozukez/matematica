@@ -27,7 +27,30 @@ class EditLessonFullscreen extends EditRecord
 
     protected static string $view = 'block-editor::editor';
 
+    protected static ?string $slug = 'editor';
+
     protected static ?string $title = 'Editor de Lição';
+
+    /**
+     * Use custom layout without sidebar
+     */
+    protected static string $layout = 'layouts.editor';
+
+    /**
+     * Remover sidebar completamente para evitar conflitos com o editor
+     */
+    public static function shouldRegisterNavigation(array $parameters = []): bool
+    {
+        return false;
+    }
+
+    /**
+     * Não mostrar sidebar em nenhuma circunstância
+     */
+    protected function shouldShowSidebar(): bool
+    {
+        return false;
+    }
 
     protected function mutateFormDataBeforeFill(array $data): array
     {

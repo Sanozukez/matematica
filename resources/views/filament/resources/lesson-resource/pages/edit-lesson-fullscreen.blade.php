@@ -206,4 +206,28 @@
                         <input
                             type="number"
                             wire:model="data.duration_minutes"
-                            class="w-full rounded-md border-g
+                            class="w-full rounded-md border-gray-300 shadow-sm sm:text-sm focus:border-blue-500 focus:ring-blue-500 text-gray-900"
+                        >
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-medium text-gray-500 uppercase mb-1">Ordem</label>
+                        <input
+                            type="number"
+                            wire:model="data.order"
+                            class="w-full rounded-md border-gray-300 shadow-sm sm:text-sm focus:border-blue-500 focus:ring-blue-500 text-gray-900"
+                        >
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</x-filament-panels::page>
+
+@once
+    @push('scripts')
+        <script>
+            @include('filament.resources.lesson-resource.pages.lesson-editor-scripts')
+        </script>
+    @endpush
+@endonce

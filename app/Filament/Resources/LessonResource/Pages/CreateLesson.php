@@ -45,7 +45,7 @@ class CreateLesson extends CreateRecord
     {
         // Se for texto, redirecionar para o editor fullscreen (TipTap/Builder)
         if ($this->record->type === 'text') {
-            return LessonResource::getUrl('fullscreen', ['record' => $this->record]);
+            return LessonResource::getUrl('editor', ['record' => $this->record]);
         }
 
         // Para outros tipos, voltar para a lista

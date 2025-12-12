@@ -319,26 +319,20 @@ class LessonResource extends Resource
                 Tables\Filters\TrashedFilter::make(),
             ])
             ->actions([
-                // Ação principal de edição (leva para editor fullscreen se for texto)
+                // Edição básica (metadados) com engrenagem
                 Tables\Actions\Action::make('edit')
                     ->label('Editar')
-                    ->icon('heroicon-o-pencil-square')
-                    ->url(fn (Lesson $record): string => 
-                        $record->type === 'text' 
-                            ? LessonResource::getUrl('fullscreen', ['record' => $record])
-                            : LessonResource::getUrl('edit', ['record' => $record])
-                    )
+                    ->icon('heroicon-o-cog-6-tooth')
+                    ->url(fn (Lesson $record): string => LessonResource::getUrl('edit', ['record' => $record]))
                     ->visible(fn (Lesson $record): bool => !$record->trashed()),
 
-                // Editor Fullscreen (TipTap/Builder)
-                Tables\Actions\Action::make('fullscreen')
+                // Editor de Blocos (TipTap/Builder)
+                Tables\Actions\Action::make('editor')
                     ->label('Editor')
-                    ->icon('heroicon-o-arrow-top-right-on-square')
+                    ->icon('heroicon-o-squares-plus')
                     ->color('primary')
                     ->visible(fn (Lesson $record): bool => $record->type === 'text' && !$record->trashed())
-                    ->url(fn (Lesson $record): string => 
-                        LessonResource::getUrl('fullscreen', ['record' => $record])
-                    ),
+                    ->url(fn (Lesson $record): string => LessonResource::getUrl('editor', ['record' => $record])),
 
                 Tables\Actions\DeleteAction::make(),
                 Tables\Actions\ForceDeleteAction::make(),
@@ -359,7 +353,7 @@ class LessonResource extends Resource
             'index' => Pages\ListLessons::route('/'),
             'create' => Pages\CreateLesson::route('/create'),
             'edit' => Pages\EditLesson::route('/{record}/edit'),
-            'fullscreen' => Pages\EditLessonFullscreen::route('/{record}/fullscreen'),
+            'editor' => Pages\EditLessonFullscreen::route('/{record}/editor'),
         ];
     }
 }
