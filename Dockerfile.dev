@@ -1,0 +1,8 @@
+FROM sail-8.4/app:latest
+
+WORKDIR /var/www/html
+
+# Install composer and npm dependencies only - project files will be mounted via bind mount
+RUN mkdir -p bootstrap/cache storage/logs storage/framework/{cache,sessions,views} && \
+    chown -R sail:sail bootstrap/cache storage && \
+    chmod -R 775 bootstrap/cache storage

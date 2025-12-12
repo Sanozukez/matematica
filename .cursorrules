@@ -1,0 +1,182 @@
+# Regras do Projeto - Plataforma Matemática LMS
+
+## Identificação
+- **Projeto**: Plataforma de Ensino de Matemática (LMS)
+- **Stack**: Laravel 12, PHP 8.4, FilamentPHP 3, Vue 3, Inertia.js, Tailwind CSS 4
+- **Ambiente**: Docker (Sail customizado), MySQL 8, Redis
+
+---
+
+## Princípios de Arquitetura
+
+### SOLID (Obrigatório)
+- **S**ingle Responsibility Principle: Cada classe/arquivo tem UMA responsabilidade
+- **O**pen/Closed: Aberto para extensão, fechado para modificação
+- **L**iskov Substitution: Subtipos devem ser substituíveis por seus tipos base
+- **I**nterface Segregation: Interfaces específicas > interfaces genéricas
+- **D**ependency Inversion: Dependa de abstrações, não de implementações
+
+### SRP em Prática
+- Arquivos pequenos e focados (menos linhas, mais arquivos)
+- Models apenas com relacionamentos e atributos
+- Lógica de negócio em Services ou Actions
+- Validação em Form Requests
+- Queries complexas em Repositories
+
+### Estrutura de Domínios
+```
+app/Domain/{Domínio}/
+├── Models/          # Eloquent Models
+├── Services/        # Lógica de negócio
+├── Actions/         # Ações únicas (Single Action Classes)
+├── Repositories/    # Queries complexas
+├── DTOs/            # Data Transfer Objects
+└── Enums/           # Enumerações do domínio
+```
+
+---
+
+## Padrões de Código
+
+### PHP/Laravel
+- Sempre usar Type Hints (parâmetros e retornos)
+- Sempre usar strict types quando possível
+- Comentários JSDoc/PHPDoc em todas as classes e métodos públicos
+- Primeira linha do arquivo: comentário com path relativo
+- Usar Enums ao invés de strings/constantes para estados
+- Preferir Collections methods ao invés de loops
+- Usar Form Requests para validação
+- Usar Resources/Transformers para respostas API
+
+### Vue/Frontend
+- Composition API (script setup)
+- Componentes pequenos e reutilizáveis
+- Props tipadas com defineProps
+- Emits declarados com defineEmits
+- Comentário no topo explicando o propósito do componente
+
+### Nomenclatura
+- Models: singular, PascalCase (User, Course, Badge)
+- Controllers: PascalCase + Controller (CourseController)
+- Services: PascalCase + Service (BadgeUnlockService)
+- Actions: verbo + substantivo (UnlockBadgeAction, CreateCourseAction)
+- Migrations: snake_case descritivo
+- Rotas: kebab-case (/skill-tree, /my-courses)
+
+---
+
+## Segurança (Sempre Considerar)
+
+### Autenticação/Autorização
+- Sempre verificar permissões antes de ações
+- Usar Policies para autorização de Models
+- Usar Gates para autorizações genéricas
+- Nunca confiar em dados do frontend
+
+### Dados
+- Sempre usar prepared statements (Eloquent faz isso)
+- Validar TODOS os inputs
+- Sanitizar outputs (Blade faz escape por padrão)
+- Usar HTTPS em produção
+- Não expor IDs sequenciais (usar UUIDs)
+
+### Senhas e Tokens
+- Usar Hash::make() para senhas
+- Tokens devem ter expiração
+- Segredos no .env, nunca no código
+
+---
+
+## Execução de Comandos
+
+### Terminal
+- Sempre executar comandos no terminal (não simular)
+- Usar docker-compose exec para comandos dentro do container
+- Em caso de erro: investigar causa raiz, não usar soluções paliativas
+- Aguardar conclusão de comandos antes de prosseguir
+- PowerShell: usar `;` ao invés de `&&` para encadear comandos
+
+### Comandos Frequentes
+```powershell
+# Artisan dentro do container
+docker-compose exec laravel.test php artisan [comando]
+
+# Composer dentro do container
+docker-compose exec laravel.test composer [comando]
+
+# NPM dentro do container
+docker-compose exec laravel.test npm [comando]
+
+# Limpar caches
+docker-compose exec laravel.test php artisan optimize:clear
+```
+
+---
+
+## Banco de Dados
+
+### Migrations
+- Sempre incluir método down() funcional
+- Usar foreign keys com onDelete apropriado
+- Adicionar índices para colunas de busca frequente
+- UUIDs como primary key (HasUuids trait)
+
+### Models
+- Sempre definir $fillable ou $guarded
+- Definir $casts para tipos especiais
+- Usar SoftDeletes quando apropriado
+- Relacionamentos bem tipados com return types
+
+---
+
+## FilamentPHP (Admin)
+
+### Resources
+- Usar Sections para organizar formulários
+- Labels em português
+- Filtros úteis nas tabelas
+- Bulk actions quando fizer sentido
+- RelationManagers para relacionamentos
+
+### Permissões
+- Usar Policies para controle de acesso
+- Verificar tenant/ownership em multi-tenant
+
+---
+
+## Testes (Quando Implementar)
+
+- Feature tests para fluxos completos
+- Unit tests para lógica isolada
+- Factories para dados de teste
+- Não depender de ordem de execução
+
+---
+
+## Git/Versionamento
+
+- Commits atômicos e descritivos
+- Não commitar .env, vendor/, node_modules/
+- docker-data/ no .gitignore (dados locais)
+
+---
+
+## Documentação
+
+- README atualizado com setup
+- Comentários explicativos no código
+- PHPDoc em classes e métodos públicos
+- Não criar arquivos .md desnecessários (apenas quando solicitado)
+
+---
+
+## Checklist Antes de Entregar Código
+
+- [ ] Segue princípios SOLID/SRP?
+- [ ] Tem comentários adequados?
+- [ ] Validações de input presentes?
+- [ ] Permissões verificadas?
+- [ ] Migrations têm down()?
+- [ ] Sem código comentado/debug?
+- [ ] Funciona no ambiente Docker?
+
