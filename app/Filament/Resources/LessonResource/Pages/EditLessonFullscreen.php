@@ -102,9 +102,15 @@ class EditLessonFullscreen extends EditRecord
             Actions\Action::make('preview')
                 ->label('Visualizar')
                 ->icon('heroicon-o-eye')
-                ->url(fn (Lesson $record): string => 
-                    route('lessons.show', $record)
-                )
+                ->url(function (Lesson $record): string {
+                    // Se a rota pública não existir ainda, retorna permalink padrão
+                    try {
+                        return route('lessons.show', $record);
+                    } catch (\Throwable $e) {
+                        $slug = $record->slug ?? (string) $record->getKey();
+                        return url("/lessons/{$slug}");
+                    }
+                })
                 ->openUrlInNewTab(),
                 
             Actions\DeleteAction::make(),
