@@ -1,0 +1,162 @@
+/**
+ * Lafily Block Editor - Canvas (Área Central)
+ */
+
+.block-editor-canvas {
+    grid-area: canvas;
+    background: var(--bg-canvas, #ffffff);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    height: calc(100vh - var(--topbar-height, 64px));
+}
+
+/* Scrollable content area */
+.block-editor-canvas-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 40px;
+    background: #fafbfc;
+}
+
+/* Editor content wrapper */
+.block-editor-canvas-wrapper {
+    max-width: 800px;
+    margin: 0 auto;
+    background: var(--bg-canvas, #ffffff);
+    border-radius: 12px;
+    padding: 40px;
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.1);
+    min-height: 400px;
+}
+
+/* Title input (editor heading) */
+.block-editor-title-input {
+    font-size: 32px;
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 24px;
+    color: #111827;
+    border: none;
+    background: transparent;
+    width: 100%;
+    padding: 0;
+    font-family: inherit;
+    resize: none;
+}
+
+.block-editor-title-input:focus {
+    outline: none;
+    color: #111827;
+}
+
+.block-editor-title-input::placeholder {
+    color: #d1d5db;
+}
+
+/* Blocks container */
+.block-editor-blocks {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+/* Individual block in canvas */
+.block-editor-block {
+    padding: 12px;
+    border: 2px solid transparent;
+    border-radius: 8px;
+    background: transparent;
+    transition: all 0.2s;
+    position: relative;
+}
+
+.block-editor-block.selected {
+    background: #f0f9ff;
+    border-color: var(--primary-color, #3b82f6);
+}
+
+.block-editor-block:hover {
+    border-color: #bfdbfe;
+}
+
+.block-editor-block-content {
+    position: relative;
+    z-index: 1;
+}
+
+/* Buttons de ação do bloco */
+.block-editor-block-actions {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    display: none;
+    gap: 4px;
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+
+.block-editor-block.selected .block-editor-block-actions {
+    display: flex;
+    opacity: 1;
+}
+
+.block-editor-block-action-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    background: var(--bg-canvas, #ffffff);
+    border: 1px solid var(--border-color, #e5e7eb);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    color: #6b7280;
+}
+
+.block-editor-block-action-btn:hover {
+    background: #f3f4f6;
+    color: var(--primary-color, #3b82f6);
+    border-color: var(--primary-color, #3b82f6);
+}
+
+/* Empty state */
+.block-editor-canvas-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    text-align: center;
+    color: #9ca3af;
+}
+
+.block-editor-canvas-empty-icon {
+    font-size: 48px;
+    margin-bottom: 16px;
+    opacity: 0.3;
+}
+
+.block-editor-canvas-empty-text {
+    font-size: 14px;
+    color: #6b7280;
+}
+
+/* Scrollbar customizado */
+.block-editor-canvas-content::-webkit-scrollbar {
+    width: 8px;
+}
+
+.block-editor-canvas-content::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.block-editor-canvas-content::-webkit-scrollbar-thumb {
+    background: #d1d5db;
+    border-radius: 4px;
+}
+
+.block-editor-canvas-content::-webkit-scrollbar-thumb:hover {
+    background: #9ca3af;
+}

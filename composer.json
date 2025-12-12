@@ -28,7 +28,8 @@
         "psr-4": {
             "App\\": "app/",
             "Database\\Factories\\": "database/factories/",
-            "Database\\Seeders\\": "database/seeders/"
+            "Database\\Seeders\\": "database/seeders/",
+            "Lafily\\BlockEditor\\": "packages/lafily/block-editor/src/"
         }
     },
     "autoload-dev": {
@@ -75,7 +76,10 @@
     },
     "extra": {
         "laravel": {
-            "dont-discover": []
+            "dont-discover": [],
+            "providers": [
+                "Lafily\\BlockEditor\\BlockEditorServiceProvider"
+            ]
         }
     },
     "config": {

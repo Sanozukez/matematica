@@ -1,0 +1,105 @@
+/**
+ * Lafily Block Editor - Sidebar Esquerda (Block Inserter)
+ */
+
+.block-editor-inserter {
+    grid-area: inserter;
+    background: var(--bg-sidebar, #ffffff);
+    border-right: 1px solid var(--border-color, #e5e7eb);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    max-height: calc(100vh - var(--topbar-height, 64px));
+}
+
+/* Header da sidebar */
+.block-editor-inserter-header {
+    padding: 16px;
+    border-bottom: 1px solid var(--border-color, #e5e7eb);
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: #6b7280;
+    letter-spacing: 0.5px;
+}
+
+/* Container scrollável dos blocos */
+.block-editor-inserter-list {
+    flex: 1;
+    overflow-y: auto;
+    padding: 8px;
+}
+
+/* Item do bloco */
+.block-editor-inserter-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    margin-bottom: 4px;
+    border-radius: 8px;
+    background: transparent;
+    border: 1px solid transparent;
+    cursor: move;
+    transition: all 0.2s;
+    font-size: 14px;
+    color: #374151;
+    user-select: none;
+}
+
+.block-editor-inserter-item:hover {
+    background: #f9fafb;
+    border-color: var(--border-color, #e5e7eb);
+}
+
+.block-editor-inserter-item:active {
+    background: #f3f4f6;
+    border-color: var(--primary-color, #3b82f6);
+}
+
+.block-editor-inserter-item svg {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+    color: #6b7280;
+}
+
+.block-editor-inserter-item:hover svg {
+    color: var(--primary-color, #3b82f6);
+}
+
+/* Ícone + Label */
+.block-editor-inserter-label {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.block-editor-inserter-label-title {
+    font-weight: 600;
+    font-size: 13px;
+    color: #111827;
+}
+
+.block-editor-inserter-label-desc {
+    font-size: 11px;
+    color: #9ca3af;
+}
+
+/* Scrollbar customizado */
+.block-editor-inserter-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+.block-editor-inserter-list::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.block-editor-inserter-list::-webkit-scrollbar-thumb {
+    background: #d1d5db;
+    border-radius: 3px;
+}
+
+.block-editor-inserter-list::-webkit-scrollbar-thumb:hover {
+    background: #9ca3af;
+}

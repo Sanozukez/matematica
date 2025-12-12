@@ -3,8 +3,8 @@
 namespace App\Filament\Resources\LessonResource\Pages;
 
 use App\Domain\Lesson\Models\Lesson;
-use App\Domain\Lesson\Services\BlockRegistry;
-use App\Domain\Lesson\Services\LessonEditorService;
+use Lafily\BlockEditor\Services\BlockRegistry;
+use Lafily\BlockEditor\Services\EditorService;
 use App\Filament\Resources\LessonResource;
 use Filament\Actions;
 use Filament\Forms\Form;
@@ -58,7 +58,7 @@ class EditLessonFullscreen extends EditRecord
         
         // Instanciar serviços
         $blockRegistry = new BlockRegistry();
-        $editorService = new LessonEditorService($blockRegistry);
+        $editorService = new EditorService($blockRegistry);
         
         return $form
             ->schema([

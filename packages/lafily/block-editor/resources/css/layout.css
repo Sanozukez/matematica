@@ -1,0 +1,50 @@
+/**
+ * Lafily Block Editor - Layout Principal
+ * Grid de 3 colunas: Inserter | Canvas | Settings
+ */
+
+.block-editor-wrapper {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background: #f3f4f6;
+}
+
+.block-editor-layout {
+    flex: 1;
+    display: grid;
+    grid-template-columns: var(--sidebar-left-width, 280px) minmax(0, 1fr) var(--sidebar-right-width, 320px);
+    grid-template-areas: "inserter canvas settings";
+    gap: 0;
+    padding-top: var(--topbar-height, 64px);
+    height: 100vh;
+}
+
+/* Quando sidebar esquerda está oculta */
+.block-editor-layout.sidebar-left-hidden {
+    grid-template-columns: 0 minmax(0, 1fr) var(--sidebar-right-width, 320px);
+}
+
+/* Responsivo */
+@media (max-width: 1024px) {
+    .block-editor-layout {
+        grid-template-columns: minmax(0, 1fr);
+        grid-template-areas: "canvas";
+    }
+    
+    .block-editor-inserter,
+    .block-editor-settings {
+        display: none;
+    }
+}
+
+/* Variáveis CSS customizáveis */
+:root {
+    --sidebar-left-width: 280px;
+    --sidebar-right-width: 320px;
+    --topbar-height: 64px;
+    --primary-color: #3b82f6;
+    --bg-canvas: #ffffff;
+    --bg-sidebar: #ffffff;
+    --border-color: #e5e7eb;
+}

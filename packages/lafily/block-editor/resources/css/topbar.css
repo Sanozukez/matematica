@@ -1,0 +1,99 @@
+/**
+ * Lafily Block Editor - Top Bar (Barra Superior Fixa)
+ */
+
+.block-editor-topbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: var(--topbar-height, 64px);
+    background: #ffffff;
+    border-bottom: 1px solid var(--border-color, #e5e7eb);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 16px;
+    z-index: 1000;
+    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.08);
+}
+
+.block-editor-topbar-left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.block-editor-topbar-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+/* Toggle sidebar button */
+.block-editor-toggle-sidebar {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 6px;
+    background: transparent;
+    border: none;
+    color: #6b7280;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.block-editor-toggle-sidebar:hover {
+    background: #f3f4f6;
+    color: #1f2937;
+}
+
+/* Brand */
+.block-editor-brand {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 18px;
+    font-weight: 600;
+    color: #111827;
+}
+
+.block-editor-brand-icon {
+    font-size: 24px;
+}
+
+/* Back button */
+.block-editor-back-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    border-radius: 6px;
+    color: #6b7280;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.2s;
+}
+
+.block-editor-back-btn:hover {
+    background: #f3f4f6;
+    color: #1f2937;
+}
+
+.block-editor-back-btn svg {
+    width: 16px;
+    height: 16px;
+}
+
+/* Toolbar placeholder (para blocos selecionados) */
+.block-editor-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0 12px;
+    border-left: 1px solid var(--border-color);
+    min-height: 40px;
+}
