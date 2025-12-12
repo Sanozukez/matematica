@@ -3,20 +3,9 @@
     $record = $this->getRecord();
 @endphp
 
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ $record->title ?? 'Editor' }} • Lafily</title>
-    
-    {{-- Lafily CSS --}}
+@push('styles')
     <link rel="stylesheet" href="{{ asset('vendor/block-editor/css/block-editor.css') }}">
-    
-    {{-- Filament Assets --}}
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
-</head>
-<body>
+@endpush
     <div class="block-editor-wrapper">
         {{-- TOP BAR --}}
         <header class="block-editor-topbar">
@@ -52,8 +41,21 @@
             </div>
 
             <div class="block-editor-topbar-right">
-                {{-- Aqui virá o menu do usuário do Filament --}}
-                @livewire('user-menu')
+                {{-- Menu do usuário (simplificado) --}}
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    @auth
+                        <span style="font-size: 12px; color: #6b7280;">{{ auth()->user()->name }}</span>
+                        <form action="{{ route('logout') }}" method="POST" style="display: inline;">
+                            @csrf
+                            <button 
+                                type="submit" 
+                                style="padding: 8px 12px; background: #f3f4f6; border: 1px solid #e5e7eb; border-radius: 6px; cursor: pointer; font-size: 12px; color: #6b7280;"
+                            >
+                                Sair
+                            </button>
+                        </form>
+                    @endauth
+                </div>
             </div>
         </header>
 
@@ -160,5 +162,4 @@
             }
         });
     </script>
-</body>
-</html>
+@endpush

@@ -25,7 +25,7 @@ class EditLessonFullscreen extends EditRecord
 {
     protected static string $resource = LessonResource::class;
 
-    protected static string $view = 'filament.resources.lesson-resource.pages.edit-lesson-fullscreen';
+    protected static string $view = 'block-editor::editor';
 
     protected static ?string $title = 'Editor de Lição';
 
