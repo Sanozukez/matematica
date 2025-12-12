@@ -5,6 +5,7 @@
 use App\Http\Controllers\App\DashboardController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\HomeController;
+use App\Domain\Lesson\Models\Lesson;
 use App\Http\Middleware\EnsureUserIsStudent;
 use Illuminate\Support\Facades\Route;
 
@@ -42,6 +43,17 @@ Route::get('/cursos', function () {
 Route::get('/skill-tree', function () {
     return inertia('SkillTree/Index');
 })->name('skill-tree.index');
+
+/**
+ * Permalink público para lições (preview)
+ * Opcional: pode ser ajustado depois para controller dedicado
+ */
+Route::get('/lessons/{lesson:slug}', function (Lesson $lesson) {
+    // Renderização simples de preview; ajuste depois para página real
+    return response()->view('lesson-preview', [
+        'lesson' => $lesson,
+    ], 200);
+})->name('lessons.show');
 
 // =============================================================================
 // ROTAS DE AUTENTICAÇÃO
