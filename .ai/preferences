@@ -1,0 +1,38 @@
+# AI Development Preferences - Projeto Matemática
+
+## Regras de Desenvolvimento
+
+### 1. Abordagem "Clean Start" quando apropriado
+**IMPORTANTE**: Se uma implementação está demorando muito tempo (mais de 3-4 tentativas) para resolver conflitos com frameworks existentes (como Filament, Livewire, Tailwind), ou outros problemas tentando implementar uma coisa de um jeito e não esta funcionando, SEMPRE sugerir ao usuário:
+
+- ✅ **Criar componente isolado** sem dependências do framework
+- ✅ **HTML + CSS inline + Alpine.js** para funcionalidades interativas
+- ✅ **Evitar conflitos de CSS** com escopos isolados
+- ❌ **NÃO persistir** em soluções que requerem override de frameworks
+
+**Exemplo**: Navbar customizada → Tentou 3x com Filament → Sugerir componente Blade isolado com Alpine.js
+
+### 2. Isolamento de Componentes
+- Componentes críticos devem ser autossuficientes
+- CSS inline quando necessário evitar conflitos
+- Alpine.js para interatividade (já disponível via Filament)
+- Persistência via `localStorage` quando apropriado
+
+### 3. Package/Namespace Naming
+- Usar nomes descritivos e únicos
+- Formato: `nome-funcional-identificador` (ex: `block-editor-ymkn`)
+- Evitar nomes genéricos que possam conflitar
+
+### 4. Performance First
+- Limpar cache após mudanças estruturais
+- Recompilar assets quando necessário (`npm run build`)
+- Verificar erros no console do navegador
+
+### 4. Debug
+- Para erros se repetindo e não encontrados, após a segunda vez usar debugs para localizar
+- Anotar em arquivo.md como foram resolvidos problemas que demoraram muito para serem descobertos
+- Executar comandos no terminal para acompanhar erros de execução
+
+---
+
+*Última atualização: 2025-12-13*

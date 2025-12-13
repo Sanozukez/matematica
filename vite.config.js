@@ -19,8 +19,6 @@ export default defineConfig({
             input: [
                 'resources/css/app.css',
                 'resources/js/app.js',
-                'resources/css/lesson-editor.css',
-                'resources/js/lesson-editor.js',
             ],
             refresh: true,
         }),

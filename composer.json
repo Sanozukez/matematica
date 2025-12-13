@@ -29,7 +29,7 @@
             "App\\": "app/",
             "Database\\Factories\\": "database/factories/",
             "Database\\Seeders\\": "database/seeders/",
-            "Lafily\\BlockEditor\\": "packages/lafily/block-editor/src/"
+            "Ymkn\\BlockEditor\\": "packages/block-editor-ymkn/block-editor/src/"
         }
     },
     "autoload-dev": {
@@ -78,7 +78,7 @@
         "laravel": {
             "dont-discover": [],
             "providers": [
-                "Lafily\\BlockEditor\\BlockEditorServiceProvider"
+                "Ymkn\\BlockEditor\\BlockEditorServiceProvider"
             ]
         }
     },
