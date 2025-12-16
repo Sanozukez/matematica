@@ -13,6 +13,14 @@
     x-transition:leave-start="opacity-100 translate-y-0"
     x-transition:leave-end="opacity-0 -translate-y-2"
     class="block-toolbar-universal"
+    x-data="{ 
+        showColors: false,
+        showAlign: false,
+        showHeadingLevel: false,
+        showMore: false,
+        showLinkInput: false,
+        linkUrl: ''
+    }"
 >
     {{-- Seção 1: CONTROLES UNIVERSAIS (todos os blocos) --}}
     <div class="block-toolbar-section">
@@ -28,10 +36,14 @@
 
         {{-- Move Up/Down (chevrons em coluna) --}}
         <div class="block-toolbar-move-vertical">
-            <button class="block-toolbar-btn-mini" title="Mover para cima" disabled>
+            <button class="block-toolbar-btn-mini" title="Mover para cima" 
+                    @click="moveBlockUp(block.id)"
+                    :disabled="blocks.findIndex(b => b.id === block.id) === 0">
                 <span class="material-icons">expand_less</span>
             </button>
-            <button class="block-toolbar-btn-mini" title="Mover para baixo" disabled>
+            <button class="block-toolbar-btn-mini" title="Mover para baixo"
+                    @click="moveBlockDown(block.id)"
+                    :disabled="blocks.findIndex(b => b.id === block.id) === blocks.length - 1">
                 <span class="material-icons">expand_more</span>
             </button>
         </div>
@@ -44,76 +56,183 @@
     {{-- PARAGRAPH: Alinhamento + Formatação --}}
     <template x-if="block.type === 'paragraph'">
         <div class="block-toolbar-section">
-            {{-- Alinhamento --}}
-            <button class="block-toolbar-btn" title="Alinhar texto" disabled>
-                <span class="material-icons">format_align_left</span>
-            </button>
+            {{-- Alinhamento (Dropdown) --}}
+            <div class="block-toolbar-dropdown">
+                <button class="block-toolbar-btn" title="Alinhar texto"
+                        @click="showAlign = !showAlign"
+                        @click.outside="showAlign = false">
+                    <span class="material-icons">format_align_left</span>
+                </button>
+                
+                <div x-show="showAlign" class="block-toolbar-dropdown-menu">
+                    <button class="block-toolbar-dropdown-item" @click="applyAlignment(block.id, 'left'); showAlign = false">
+                        <span class="material-icons">format_align_left</span>
+                        <span>Alinhar à esquerda</span>
+                    </button>
+                    <button class="block-toolbar-dropdown-item" @click="applyAlignment(block.id, 'center'); showAlign = false">
+                        <span class="material-icons">format_align_center</span>
+                        <span>Centralizar</span>
+                    </button>
+                    <button class="block-toolbar-dropdown-item" @click="applyAlignment(block.id, 'right'); showAlign = false">
+                        <span class="material-icons">format_align_right</span>
+                        <span>Alinhar à direita</span>
+                    </button>
+                    <button class="block-toolbar-dropdown-item" @click="applyAlignment(block.id, 'justify'); showAlign = false">
+                        <span class="material-icons">format_align_justify</span>
+                        <span>Justificar</span>
+                    </button>
+                </div>
+            </div>
             
             <div class="block-toolbar-divider"></div>
             
             {{-- Negrito --}}
-            <button class="block-toolbar-btn" title="Negrito (Ctrl+B)" disabled>
+            <button class="block-toolbar-btn" title="Negrito (Ctrl+B)"
+                    @click="applyFormatting(block.id, 'bold')">
                 <span class="material-icons">format_bold</span>
             </button>
             
             {{-- Itálico --}}
-            <button class="block-toolbar-btn" title="Itálico (Ctrl+I)" disabled>
+            <button class="block-toolbar-btn" title="Itálico (Ctrl+I)"
+                    @click="applyFormatting(block.id, 'italic')">
                 <span class="material-icons">format_italic</span>
             </button>
             
             {{-- Link --}}
-            <button class="block-toolbar-btn" title="Inserir link (Ctrl+K)" disabled>
-                <span class="material-icons">link</span>
-            </button>
-            
-            {{-- Mais formatações (dropdown) --}}
-            <button class="block-toolbar-btn" title="Mais opções de formatação" disabled>
-                <span class="material-icons">expand_more</span>
-            </button>
+            <div class="block-toolbar-dropdown">
+                <button class="block-toolbar-btn" title="Inserir link (Ctrl+K)"
+                        @click="showLinkInput = !showLinkInput"
+                        @click.outside="showLinkInput = false">
+                    <span class="material-icons">link</span>
+                </button>
+                
+                <div x-show="showLinkInput" class="block-toolbar-dropdown-menu" style="min-width: 280px;">
+                    <input type="url" 
+                           x-model="linkUrl" 
+                           placeholder="https://exemplo.com"
+                           @keydown.enter="insertLink(block.id, linkUrl); linkUrl = ''; showLinkInput = false"
+                           style="width: 100%; padding: 8px; background: #2C2C2C; border: 1px solid #3C3C3C; border-radius: 4px; color: #E0E0E0; font-size: 13px; margin-bottom: 8px;">
+                    <button class="block-toolbar-dropdown-item" @click="insertLink(block.id, linkUrl); linkUrl = ''; showLinkInput = false">
+                        <span class="material-icons">done</span>
+                        <span>Inserir link</span>
+                    </button>
+                </div>
+            </div>
         </div>
     </template>
 
     {{-- HEADING: Nível H + Alinhamento + Formatação --}}
     <template x-if="block.type === 'heading'">
         <div class="block-toolbar-section">
-            {{-- Seletor de nível H1-H6 --}}
-            <button class="block-toolbar-btn block-toolbar-heading-level" title="Alterar nível do título">
-                <span x-text="'H' + (block.attributes.level || 2)"></span>
-                <span class="material-icons" style="font-size: 14px;">expand_more</span>
-            </button>
+            {{-- Seletor de nível H1-H6 (Dropdown) --}}
+            <div class="block-toolbar-dropdown">
+                <button class="block-toolbar-btn block-toolbar-heading-level" title="Alterar nível do título"
+                        @click="showHeadingLevel = !showHeadingLevel"
+                        @click.outside="showHeadingLevel = false">
+                    <span x-text="'H' + (block.attributes.level || 2)"></span>
+                    <span class="material-icons" style="font-size: 14px;">expand_more</span>
+                </button>
+                
+                <div x-show="showHeadingLevel" class="block-toolbar-dropdown-menu">
+                    <template x-for="level in [1,2,3,4,5,6]" :key="level">
+                        <button class="block-toolbar-dropdown-item" 
+                                @click="updateBlockAttributes(block.id, { level }); showHeadingLevel = false">
+                            <span x-text="'H' + level" style="font-weight: bold; font-size: 14px;"></span>
+                            <span x-text="'Título ' + level"></span>
+                        </button>
+                    </template>
+                </div>
+            </div>
             
             <div class="block-toolbar-divider"></div>
             
-            {{-- Alinhamento --}}
-            <button class="block-toolbar-btn" title="Alinhar título" disabled>
-                <span class="material-icons">format_align_left</span>
-            </button>
+            {{-- Alinhamento (Dropdown) --}}
+            <div class="block-toolbar-dropdown">
+                <button class="block-toolbar-btn" title="Alinhar título"
+                        @click="showAlign = !showAlign"
+                        @click.outside="showAlign = false">
+                    <span class="material-icons">format_align_left</span>
+                </button>
+                
+                <div x-show="showAlign" class="block-toolbar-dropdown-menu">
+                    <button class="block-toolbar-dropdown-item" @click="applyAlignment(block.id, 'left'); showAlign = false">
+                        <span class="material-icons">format_align_left</span>
+                        <span>Alinhar à esquerda</span>
+                    </button>
+                    <button class="block-toolbar-dropdown-item" @click="applyAlignment(block.id, 'center'); showAlign = false">
+                        <span class="material-icons">format_align_center</span>
+                        <span>Centralizar</span>
+                    </button>
+                    <button class="block-toolbar-dropdown-item" @click="applyAlignment(block.id, 'right'); showAlign = false">
+                        <span class="material-icons">format_align_right</span>
+                        <span>Alinhar à direita</span>
+                    </button>
+                </div>
+            </div>
             
             <div class="block-toolbar-divider"></div>
             
             {{-- Negrito --}}
-            <button class="block-toolbar-btn" title="Negrito" disabled>
+            <button class="block-toolbar-btn" title="Negrito"
+                    @click="applyFormatting(block.id, 'bold')">
                 <span class="material-icons">format_bold</span>
             </button>
             
             {{-- Itálico --}}
-            <button class="block-toolbar-btn" title="Itálico" disabled>
+            <button class="block-toolbar-btn" title="Itálico"
+                    @click="applyFormatting(block.id, 'italic')">
                 <span class="material-icons">format_italic</span>
             </button>
             
             {{-- Link --}}
-            <button class="block-toolbar-btn" title="Inserir link" disabled>
-                <span class="material-icons">link</span>
-            </button>
+            <div class="block-toolbar-dropdown">
+                <button class="block-toolbar-btn" title="Inserir link"
+                        @click="showLinkInput = !showLinkInput"
+                        @click.outside="showLinkInput = false">
+                    <span class="material-icons">link</span>
+                </button>
+                
+                <div x-show="showLinkInput" class="block-toolbar-dropdown-menu" style="min-width: 280px;">
+                    <input type="url" 
+                           x-model="linkUrl" 
+                           placeholder="https://exemplo.com"
+                           @keydown.enter="insertLink(block.id, linkUrl); linkUrl = ''; showLinkInput = false"
+                           style="width: 100%; padding: 8px; background: #2C2C2C; border: 1px solid #3C3C3C; border-radius: 4px; color: #E0E0E0; font-size: 13px; margin-bottom: 8px;">
+                    <button class="block-toolbar-dropdown-item" @click="insertLink(block.id, linkUrl); linkUrl = ''; showLinkInput = false">
+                        <span class="material-icons">done</span>
+                        <span>Inserir link</span>
+                    </button>
+                </div>
+            </div>
         </div>
     </template>
 
     {{-- QUOTE: Alinhamento --}}
     <template x-if="block.type === 'quote'">
         <div class="block-toolbar-section">
-            <button class="block-toolbar-btn" title="Alinhar citação" disabled>
-                <span class="material-icons">format_align_left</span>
-            </button>
+            {{-- Alinhamento (Dropdown) --}}
+            <div class="block-toolbar-dropdown">
+                <button class="block-toolbar-btn" title="Alinhar citação"
+                        @click="showAlign = !showAlign"
+                        @click.outside="showAlign = false">
+                    <span class="material-icons">format_align_left</span>
+                </button>
+                
+                <div x-show="showAlign" class="block-toolbar-dropdown-menu">
+                    <button class="block-toolbar-dropdown-item" @click="applyAlignment(block.id, 'left'); showAlign = false">
+                        <span class="material-icons">format_align_left</span>
+                        <span>Alinhar à esquerda</span>
+                    </button>
+                    <button class="block-toolbar-dropdown-item" @click="applyAlignment(block.id, 'center'); showAlign = false">
+                        <span class="material-icons">format_align_center</span>
+                        <span>Centralizar</span>
+                    </button>
+                    <button class="block-toolbar-dropdown-item" @click="applyAlignment(block.id, 'right'); showAlign = false">
+                        <span class="material-icons">format_align_right</span>
+                        <span>Alinhar à direita</span>
+                    </button>
+                </div>
+            </div>
         </div>
     </template>
 
@@ -661,10 +780,36 @@
     </template>
     
     <div class="block-toolbar-divider"></div>
+    
+    {{-- More Options (todos os blocos) --}}
     <div class="block-toolbar-section">
-        <button class="block-toolbar-btn" title="Mais opções" disabled>
-            <span class="material-icons">more_vert</span>
-        </button>
+        <div class="block-toolbar-dropdown">
+            <button class="block-toolbar-btn" title="Mais opções"
+                    @click="showMore = !showMore"
+                    @click.outside="showMore = false">
+                <span class="material-icons">more_vert</span>
+            </button>
+            
+            <div x-show="showMore" class="block-toolbar-dropdown-menu">
+                <button class="block-toolbar-dropdown-item" @click="duplicateBlock(block.id); showMore = false">
+                    <span class="material-icons">content_copy</span>
+                    <span>Duplicar bloco</span>
+                </button>
+                <button class="block-toolbar-dropdown-item" @click="addBlock('paragraph', blocks.findIndex(b => b.id === block.id)); showMore = false">
+                    <span class="material-icons">add_circle_outline</span>
+                    <span>Inserir bloco antes</span>
+                </button>
+                <button class="block-toolbar-dropdown-item" @click="addBlock('paragraph', blocks.findIndex(b => b.id === block.id) + 1); showMore = false">
+                    <span class="material-icons">add_circle_outline</span>
+                    <span>Inserir bloco depois</span>
+                </button>
+                <div style="height: 1px; background: #3C3C3C; margin: 4px 0;"></div>
+                <button class="block-toolbar-dropdown-item" @click="removeBlock(block.id); showMore = false" style="color: #FF6B6B;">
+                    <span class="material-icons">delete_outline</span>
+                    <span>Excluir bloco</span>
+                </button>
+            </div>
+        </div>
     </div>
 </div>
 

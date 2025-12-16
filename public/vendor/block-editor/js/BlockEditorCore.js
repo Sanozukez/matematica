@@ -188,6 +188,91 @@ window.BlockEditorCore = function() {
         },
         
         /**
+         * Aplica formatação (bold, italic, underline, etc)
+         */
+        applyFormatting(blockId, format) {
+            const element = document.querySelector(`[data-block-id="${blockId}"]`);
+            if (element) {
+                const editable = element.querySelector('[contenteditable="true"]');
+                if (editable) {
+                    editable.focus();
+                    document.execCommand(format, false, null);
+                }
+            }
+        },
+        
+        /**
+         * Aplica alinhamento ao bloco
+         */
+        applyAlignment(blockId, alignment) {
+            const block = this.blocks.find(b => b.id === blockId);
+            if (!block) return;
+            
+            if (!block.attributes) block.attributes = {};
+            block.attributes.alignment = alignment;
+            
+            const element = document.querySelector(`[data-block-id="${blockId}"]`);
+            if (element) {
+                const editable = element.querySelector('[contenteditable="true"]');
+                if (editable) {
+                    ['text-left', 'text-center', 'text-right', 'text-justify'].forEach(c => editable.classList.remove(c));
+                    if (alignment) {
+                        editable.classList.add(`text-${alignment}`);
+                    }
+                }
+            }
+        },
+        
+        /**
+         * Move bloco para cima
+         */
+        moveBlockUp(blockId) {
+            const index = this.blocks.findIndex(b => b.id === blockId);
+            if (index > 0) {
+                [this.blocks[index - 1], this.blocks[index]] = [this.blocks[index], this.blocks[index - 1]];
+            }
+        },
+        
+        /**
+         * Move bloco para baixo
+         */
+        moveBlockDown(blockId) {
+            const index = this.blocks.findIndex(b => b.id === blockId);
+            if (index < this.blocks.length - 1) {
+                [this.blocks[index], this.blocks[index + 1]] = [this.blocks[index + 1], this.blocks[index]];
+            }
+        },
+        
+        /**
+         * Duplica um bloco
+         */
+        duplicateBlock(blockId) {
+            const index = this.blocks.findIndex(b => b.id === blockId);
+            if (index !== -1) {
+                const originalBlock = this.blocks[index];
+                const newBlock = JSON.parse(JSON.stringify(originalBlock));
+                newBlock.id = Date.now();
+                this.blocks.splice(index + 1, 0, newBlock);
+            }
+        },
+        
+        /**
+         * Insere link no texto selecionado
+         */
+        insertLink(blockId, url) {
+            if (!url) return;
+            
+            const element = document.querySelector(`[data-block-id="${blockId}"]`);
+            if (element) {
+                const editable = element.querySelector('[contenteditable="true"]');
+                if (editable) {
+                    editable.focus();
+                    document.execCommand('createLink', false, url);
+                }
+            }
+        },
+        
+        /**
          * Foca em um bloco específico
          */
         focusBlock(blockId) {
