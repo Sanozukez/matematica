@@ -54,11 +54,11 @@
     </div>
 
     {{-- Content + Sidebar Container --}}
-    <div class="block-editor-main">
+    <div class="block-editor-main" @click.self="deselectBlock()">
         {{-- Editor Content (Título + Canvas) --}}
-        <div class="block-editor-content">
+        <div class="block-editor-content" @click.self="deselectBlock()">
             {{-- Título da Aula (acima do canvas) --}}
-            <div class="lesson-title-wrapper" :class="{ 'shifted': canvasShifted }">
+            <div class="lesson-title-wrapper" :class="{ 'shifted': canvasShifted }" @click.self="deselectBlock()">
                 <input 
                     type="text" 
                     class="lesson-title-input" 
@@ -68,7 +68,7 @@
             </div>
 
             {{-- Editor Canvas --}}
-            <div class="block-editor-canvas" :class="{ 'shifted': canvasShifted }">
+            <div class="block-editor-canvas" :class="{ 'shifted': canvasShifted }" @click.self="deselectBlock()">
             <div class="block-editor-blocks" @click="handleCanvasClick($event)">
                 {{-- Empty State --}}
                 <div 
@@ -119,7 +119,7 @@
         </div>
 
         {{-- Right Sidebar (Document Info) --}}
-        <aside class="block-editor-sidebar-right">
+        <aside class="block-editor-sidebar-right" @click="deselectBlock()">
             <div class="sidebar-section">
                 <div class="sidebar-section-title">Status</div>
                 <div class="sidebar-info-item">Rascunho</div>

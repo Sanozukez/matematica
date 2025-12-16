@@ -170,18 +170,39 @@ window.BlockEditorCore = function() {
             if (!block.attributes) block.attributes = {};
             block.attributes.textColor = colorClass;
             
-            // Aplica classe ao elemento DOM
+            // Aplica cor na seleção de texto (ou todo o bloco se não houver seleção)
             const element = document.querySelector(`[data-block-id="${blockId}"]`);
             if (element) {
                 const editable = element.querySelector('[contenteditable="true"]');
                 if (editable) {
-                    // Remove todas as classes de cor anteriores
-                    const colorClasses = Array.from(editable.classList).filter(c => c.startsWith('text-'));
-                    colorClasses.forEach(c => editable.classList.remove(c));
+                    editable.focus();
+                    const selection = window.getSelection();
                     
-                    // Adiciona nova classe de cor
-                    if (colorClass) {
-                        editable.classList.add(colorClass);
+                    // Se há texto selecionado, aplica cor apenas nele
+                    if (selection.rangeCount > 0 && !selection.isCollapsed) {
+                        const range = selection.getRangeAt(0);
+                        const selectedText = range.toString();
+                        
+                        if (selectedText.trim()) {
+                            // Remove cor anterior (se houver span com classe text-*)
+                            const span = document.createElement('span');
+                            span.className = colorClass || '';
+                            span.textContent = selectedText;
+                            
+                            range.deleteContents();
+                            range.insertNode(span);
+                            
+                            // Limpa seleção
+                            selection.removeAllRanges();
+                        }
+                    } else {
+                        // Sem seleção: aplica cor a todo o bloco
+                        const colorClasses = Array.from(editable.classList).filter(c => c.startsWith('text-'));
+                        colorClasses.forEach(c => editable.classList.remove(c));
+                        
+                        if (colorClass) {
+                            editable.classList.add(colorClass);
+                        }
                     }
                 }
             }
@@ -333,6 +354,13 @@ window.BlockEditorCore = function() {
          */
         generateBlockId() {
             return `block_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+        },
+        
+        /**
+         * Desseleciona bloco ativo
+         */
+        deselectBlock() {
+            this.focusedBlockId = null;
         },
         
         /**

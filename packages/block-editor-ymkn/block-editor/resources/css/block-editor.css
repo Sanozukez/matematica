@@ -733,6 +733,7 @@
 .color-row {
     display: flex;
     gap: 1px;
+    flex-wrap: nowrap;
 }
 
 .color-swatch {
