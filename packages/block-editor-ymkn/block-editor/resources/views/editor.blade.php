@@ -53,20 +53,22 @@
         </div>
     </div>
 
-    {{-- Main Content Area --}}
+    {{-- Content + Sidebar Container --}}
     <div class="block-editor-main">
-        {{-- Título da Aula (entre topbar e canvas) --}}
-        <div class="lesson-title-wrapper" :class="{ 'shifted': canvasShifted }">
-            <input 
-                type="text" 
-                class="lesson-title-input" 
-                placeholder="Adicionar título"
-                value="{{ $lesson->title ?? '' }}"
-            >
-        </div>
+        {{-- Editor Content (Título + Canvas) --}}
+        <div class="block-editor-content">
+            {{-- Título da Aula (acima do canvas) --}}
+            <div class="lesson-title-wrapper" :class="{ 'shifted': canvasShifted }">
+                <input 
+                    type="text" 
+                    class="lesson-title-input" 
+                    placeholder="Adicionar título"
+                    value="{{ $lesson->title ?? '' }}"
+                >
+            </div>
 
-        {{-- Editor Canvas --}}
-        <div class="block-editor-canvas" :class="{ 'shifted': canvasShifted }">
+            {{-- Editor Canvas --}}
+            <div class="block-editor-canvas" :class="{ 'shifted': canvasShifted }">
             <div class="block-editor-blocks" @click="handleCanvasClick($event)">
                 {{-- Empty State --}}
                 <div 
@@ -113,6 +115,7 @@
                     </div>
                 </template>
             </div>
+        </div>
         </div>
 
         {{-- Right Sidebar (Document Info) --}}

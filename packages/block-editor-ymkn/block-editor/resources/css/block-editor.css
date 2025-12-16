@@ -130,20 +130,28 @@
     cursor: not-allowed;
 }
 
-/* Main content area */
+/* Main content area (horizontal: content + sidebar) */
 .block-editor-main {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     flex: 1;
     overflow: hidden;
     position: relative;
 }
 
-/* Título da Aula (entre topbar e canvas, sem fundo branco) */
+/* Editor Content (vertical: título + canvas) */
+.block-editor-content {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    overflow: hidden;
+}
+
+/* Título da Aula (acima do canvas) */
 .lesson-title-wrapper {
     max-width: 800px;
     margin: 0 auto;
-    padding: 40px 80px 20px 80px;
+    padding: 30px 80px 10px 80px;
     transition: margin-left 0.3s ease;
 }
 
@@ -707,35 +715,39 @@
     background: #1E1E1E;
     border: 1px solid #3C3C3C;
     border-radius: 8px;
-    padding: 12px;
+    padding: 8px;
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
     z-index: 110;
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    gap: 1px;
+    max-height: 400px;
+    overflow-y: auto;
 }
 
 .color-row {
     display: flex;
-    gap: 6px;
+    gap: 1px;
 }
 
 .color-swatch {
-    width: 28px;
-    height: 28px;
-    border-radius: 4px;
-    border: 2px solid transparent;
+    width: 20px;
+    height: 20px;
+    border-radius: 3px;
+    border: 1px solid transparent;
     cursor: pointer;
-    transition: all 0.15s ease;
+    transition: all 0.1s ease;
+    flex-shrink: 0;
 }
 
 .color-swatch:hover {
     border-color: #FFFFFF;
-    transform: scale(1.1);
+    transform: scale(1.15);
+    z-index: 1;
 }
 
 .color-swatch:active {
-    transform: scale(0.95);
+    transform: scale(0.9);
 }
 
 /* =============================================================================

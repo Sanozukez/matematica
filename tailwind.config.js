@@ -8,25 +8,11 @@ export default {
         './resources/**/*.vue',
     ],
     safelist: [
-        // Cores de texto para o Block Editor
-        'text-red-500', 'text-red-600', 'text-red-700',
-        'text-orange-500', 'text-orange-600', 'text-orange-700',
-        'text-yellow-500', 'text-yellow-600', 'text-yellow-700',
-        'text-green-500', 'text-green-600', 'text-green-700',
-        'text-blue-500', 'text-blue-600', 'text-blue-700',
-        'text-indigo-500', 'text-indigo-600', 'text-indigo-700',
-        'text-purple-500', 'text-purple-600', 'text-purple-700',
-        'text-pink-500', 'text-pink-600', 'text-pink-700',
-        // Cores de fundo para o seletor
-        'bg-red-500', 'bg-red-600', 'bg-red-700',
-        'bg-orange-500', 'bg-orange-600', 'bg-orange-700',
-        'bg-yellow-500', 'bg-yellow-600', 'bg-yellow-700',
-        'bg-green-500', 'bg-green-600', 'bg-green-700',
-        'bg-blue-500', 'bg-blue-600', 'bg-blue-700',
-        'bg-indigo-500', 'bg-indigo-600', 'bg-indigo-700',
-        'bg-purple-500', 'bg-purple-600', 'bg-purple-700',
-        'bg-pink-500', 'bg-pink-600', 'bg-pink-700',
-        'bg-gray-900',
+        // Cores de texto para o Block Editor (TODAS as cores Tailwind)
+        { pattern: /^text-(slate|gray|zinc|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose)-(400|500|600|700|800|900)$/ },
+        // Cores de fundo para os swatches
+        { pattern: /^bg-(slate|gray|zinc|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose)-(400|500|600|700|800|900)$/ },
+        'bg-black',
     ],
     theme: {
         extend: {
