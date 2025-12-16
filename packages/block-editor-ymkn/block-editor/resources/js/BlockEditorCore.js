@@ -143,8 +143,10 @@ window.BlockEditorCore = function() {
                 
                 if (response.ok) {
                     this.hasChanges = false;
+                    console.log('✅ Salvamento bem-sucedido, chamando showToast...');
                     this.showToast('Salvo com sucesso!', 'success');
                 } else {
+                    console.error('❌ Erro ao salvar, status:', response.status);
                     this.showToast('Erro ao salvar', 'error');
                 }
             } catch (error) {
@@ -159,11 +161,15 @@ window.BlockEditorCore = function() {
          * Exibe toaster de feedback
          */
         showToast(message, type = 'success') {
+            console.log('🔔 showToast chamado:', message, 'showSaveToast:', this.showSaveToast);
             this.saveToastMessage = message;
             this.showSaveToast = true;
             
+            console.log('🔔 Após set: showSaveToast =', this.showSaveToast, 'message =', this.saveToastMessage);
+            
             setTimeout(() => {
                 this.showSaveToast = false;
+                console.log('🔔 Toaster ocultado após 3s');
             }, 3000);
         },
         
