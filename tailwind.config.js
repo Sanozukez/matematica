@@ -8,10 +8,10 @@ export default {
         './resources/**/*.vue',
     ],
     safelist: [
-        // Cores de texto para o Block Editor (TODAS as cores Tailwind)
-        { pattern: /^text-(slate|gray|zinc|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose)-(400|500|600|700|800|900)$/ },
+        // Cores de texto para o Block Editor (TODAS as cores Tailwind - 11 tons)
+        { pattern: /^text-(slate|gray|zinc|neutral|stone|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose)-(50|100|200|300|400|500|600|700|800|900|950)$/ },
         // Cores de fundo para os swatches
-        { pattern: /^bg-(slate|gray|zinc|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose)-(400|500|600|700|800|900)$/ },
+        { pattern: /^bg-(slate|gray|zinc|neutral|stone|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose)-(50|100|200|300|400|500|600|700|800|900|950)$/ },
         'bg-black',
     ],
     theme: {

@@ -156,7 +156,7 @@
 }
 
 .lesson-title-wrapper.shifted {
-    margin-left: 140px; /* Metade da sidebar (280px / 2) */
+    margin-left: 140px; /* Empurra para DIREITA (metade da sidebar 280px / 2) */
 }
 
 /* Canvas (área central editável) */
@@ -170,7 +170,7 @@
 }
 
 .block-editor-canvas.shifted {
-    margin-left: 280px;
+    margin-left: 280px; /* Empurra para DIREITA quando sidebar esquerda abre */
 }
 
 .lesson-title-input {
@@ -201,7 +201,7 @@
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     border-radius: 8px;
     padding: 20px 80px 60px 80px;
-    min-height: calc(100vh - 300px);
+    min-height: 100vh;
 }
 
 /* Right Sidebar (info da aula) */
