@@ -8,11 +8,11 @@
  * - Listeners de teclado (Enter, Backspace, Arrow keys)
  * 
  * Princípio SRP: Apenas lógica de blocos, sem UI direta
+ * 
+ * Exposto globalmente como window.BlockEditorCore
  */
 
-import { BLOCK_TYPES } from './block-types.js';
-
-export default function BlockEditorCore() {
+window.BlockEditorCore = function() {
     return {
         // Estado
         blocks: [],
@@ -24,7 +24,7 @@ export default function BlockEditorCore() {
         canvasShifted: false, // Canvas empurrado para direita
         
         // Tipos de blocos disponíveis
-        blockTypes: BLOCK_TYPES,
+        blockTypes: window.BLOCK_TYPES,
         filteredBlockTypes: [],
         
         /**
@@ -319,7 +319,4 @@ export default function BlockEditorCore() {
             }
         }
     };
-}
-
-// Exporta para uso global (Alpine.js)
-window.BlockEditorCore = BlockEditorCore;
+};

@@ -6,9 +6,11 @@
  * - label: Nome exibido
  * - icon: SVG Heroicons inline
  * - description: Descrição do bloco
+ * 
+ * Exposto globalmente como window.BLOCK_TYPES
  */
 
-export const BLOCK_TYPES = [
+window.BLOCK_TYPES = [
     {
         type: 'paragraph',
         label: 'Parágrafo',

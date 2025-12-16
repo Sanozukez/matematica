@@ -3,9 +3,9 @@
 {{-- External CSS --}}
 <link rel="stylesheet" href="{{ asset('vendor/block-editor/css/block-editor.css') }}">
 
-{{-- External JavaScript (Block Types + Core Logic) --}}
-<script type="module" src="{{ asset('vendor/block-editor/js/block-types.js') }}"></script>
-<script type="module" src="{{ asset('vendor/block-editor/js/BlockEditorCore.js') }}"></script>
+{{-- External JavaScript (carregamento tradicional sem modules) --}}
+<script src="{{ asset('vendor/block-editor/js/block-types.js') }}"></script>
+<script src="{{ asset('vendor/block-editor/js/BlockEditorCore.js') }}"></script>
 
 <div 
     class="block-editor-layout" 
