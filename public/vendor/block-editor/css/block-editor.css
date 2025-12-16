@@ -1,29 +1,569 @@
 /**
- * Lafily Block Editor - Main CSS Bundle
- * Importa todos os módulos CSS
+ * Block Editor Styles - Gutenberg-inspired (WordPress Style)
+ * 
+ * Estrutura:
+ * 1. Utilitários (x-cloak, etc)
+ * 2. Layout principal (toolbar, canvas, sidebars)
+ * 3. Block inserter (sidebar esquerda)
+ * 4. Blocos individuais
+ * 5. Estados especiais (focus, empty, loading)
+ * 6. Proteções (Navbar Filament)
  */
 
-/* Layout Principal */
-@import url('./layout.css');
+/* =============================================================================
+   0. UTILITÁRIOS
+   ============================================================================= */
 
-/* Barra Superior */
-@import url('./topbar.css');
+[x-cloak] { 
+    display: none !important; 
+}
 
-/* Sidebar Esquerda (Inserter) */
-@import url('./sidebar-left.css');
+/* =============================================================================
+   1. LAYOUT PRINCIPAL
+   ============================================================================= */
 
-/* Sidebar Direita (Settings) */
-@import url('./sidebar-right.css');
+.block-editor-layout {
+    min-height: 100vh;
+    background: #F0F0F0;
+    display: flex;
+    flex-direction: column;
+}
 
-/* Canvas (Área Central) */
-@import url('./canvas.css');
+/* Toolbar superior */
+.block-editor-toolbar {
+    background: white;
+    border-bottom: 1px solid #DCDCDE;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    z-index: 30;
+}
 
-/* Responsivo */
-@import url('./responsive.css');
+.block-editor-toolbar-left,
+.block-editor-toolbar-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
 
-/* ============================================
-   PROTEÇÃO DA NAVBAR - NÃO MEXER
-   ============================================ */
+.block-editor-logo {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #1E1E1E;
+    margin-right: 20px;
+}
+
+.block-editor-btn {
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: 1px solid transparent;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.block-editor-btn-primary {
+    background: #007CBA;
+    color: white;
+    border-color: #007CBA;
+}
+
+.block-editor-btn-primary:hover:not(:disabled) {
+    background: #005A87;
+    border-color: #005A87;
+}
+
+.block-editor-btn-secondary {
+    background: white;
+    color: #1E1E1E;
+    border-color: #DCDCDE;
+}
+
+.block-editor-btn-secondary:hover:not(:disabled) {
+    background: #F0F0F0;
+    border-color: #A0A5AA;
+}
+
+.block-editor-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Main content area */
+.block-editor-main {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+    position: relative;
+}
+
+/* Canvas (área central editável) */
+.block-editor-canvas {
+    flex: 1;
+    overflow-y: auto;
+    padding: 40px 20px;
+    display: flex;
+    justify-content: center;
+    transition: margin-left 0.3s ease;
+}
+
+.block-editor-canvas.shifted {
+    margin-left: 280px;
+}
+
+.block-editor-blocks {
+    width: 100%;
+    max-width: 800px;
+    background: white;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    padding: 60px 80px;
+    min-height: calc(100vh - 200px);
+}
+
+/* Right Sidebar (info da aula) */
+.block-editor-sidebar-right {
+    width: 280px;
+    background: white;
+    border-left: 1px solid #DCDCDE;
+    padding: 24px;
+    overflow-y: auto;
+}
+
+.sidebar-section {
+    margin-bottom: 24px;
+}
+
+.sidebar-section-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: #1E1E1E;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.sidebar-info-item {
+    font-size: 14px;
+    color: #757575;
+    padding: 8px 0;
+    border-bottom: 1px solid #F0F0F0;
+}
+
+.sidebar-info-item:last-child {
+    border-bottom: none;
+}
+
+/* =============================================================================
+   2. BLOCK INSERTER (Sidebar Esquerda)
+   ============================================================================= */
+
+.block-inserter-wp {
+    position: fixed;
+    top: 65px;
+    left: 0;
+    bottom: 0;
+    width: 280px;
+    background: white;
+    border-right: 1px solid #DCDCDE;
+    display: flex;
+    flex-direction: column;
+    z-index: 25;
+    box-shadow: 2px 0 8px rgba(0, 0, 0, 0.05);
+}
+
+/* Header */
+.block-inserter-header-wp {
+    padding: 16px 20px;
+    border-bottom: 1px solid #DCDCDE;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.block-inserter-title-wp {
+    font-size: 14px;
+    font-weight: 600;
+    color: #1E1E1E;
+}
+
+.block-inserter-close-wp {
+    width: 28px;
+    height: 28px;
+    border-radius: 4px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #757575;
+    transition: all 0.2s;
+}
+
+.block-inserter-close-wp:hover {
+    background: #F0F0F0;
+    color: #1E1E1E;
+}
+
+/* Search */
+.block-inserter-search-wp {
+    padding: 12px 20px;
+    border-bottom: 1px solid #F0F0F0;
+}
+
+.search-input-wrapper-wp {
+    position: relative;
+}
+
+.search-icon-wp {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 16px;
+    height: 16px;
+    color: #757575;
+}
+
+.block-inserter-search-input-wp {
+    width: 100%;
+    padding: 8px 12px 8px 36px;
+    border: 1px solid #DCDCDE;
+    border-radius: 4px;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.block-inserter-search-input-wp:focus {
+    border-color: #007CBA;
+}
+
+/* Lista de blocos */
+.block-inserter-list-wp {
+    flex: 1;
+    overflow-y: auto;
+    padding: 8px 0;
+}
+
+.block-inserter-item-wp {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 20px;
+    cursor: pointer;
+    transition: background 0.2s;
+    border: none;
+    background: transparent;
+    width: 100%;
+    text-align: left;
+}
+
+.block-inserter-item-wp:hover {
+    background: #F0F0F0;
+}
+
+.block-inserter-icon-wp {
+    width: 24px;
+    height: 24px;
+    flex-shrink: 0;
+    color: #007CBA;
+}
+
+.block-inserter-text-wp {
+    flex: 1;
+}
+
+.block-inserter-label-wp {
+    font-size: 14px;
+    font-weight: 500;
+    color: #1E1E1E;
+    margin-bottom: 2px;
+    display: block;
+}
+
+.block-inserter-description-wp {
+    font-size: 12px;
+    color: #757575;
+    line-height: 1.3;
+}
+
+.block-inserter-empty-wp {
+    padding: 40px 20px;
+    text-align: center;
+    color: #757575;
+    font-size: 14px;
+}
+
+/* =============================================================================
+   3. BLOCOS INDIVIDUAIS
+   ============================================================================= */
+
+.block-wrapper {
+    margin-bottom: 16px;
+    position: relative;
+}
+
+.block-wrapper:last-child {
+    margin-bottom: 0;
+}
+
+/* Parágrafo */
+.block-paragraph {
+    min-height: 2.5rem;
+    line-height: 1.8;
+    font-size: 16px;
+    color: #1E1E1E;
+    padding: 0.75rem 1rem;
+    border-radius: 4px;
+    transition: background 0.2s;
+}
+
+.block-paragraph:focus {
+    outline: none;
+    background: #F9FAFB;
+}
+
+.block-paragraph:empty:before {
+    content: attr(data-placeholder);
+    color: #A0A5AA;
+}
+
+/* Heading */
+.block-heading {
+    font-weight: 700;
+    color: #1E1E1E;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    line-height: 1.3;
+}
+
+.block-heading:focus {
+    outline: none;
+    background: #F9FAFB;
+}
+
+.block-heading:empty:before {
+    content: 'Digite o título...';
+    color: #A0A5AA;
+    font-weight: 400;
+}
+
+.heading-level-1 { font-size: 2.5rem; }
+.heading-level-2 { font-size: 2rem; }
+.heading-level-3 { font-size: 1.75rem; }
+.heading-level-4 { font-size: 1.5rem; }
+.heading-level-5 { font-size: 1.25rem; }
+.heading-level-6 { font-size: 1.125rem; }
+
+/* Quote */
+.block-quote {
+    border-left: 4px solid #007CBA;
+    background: #F9FAFB;
+    padding: 1.5rem 2rem;
+    border-radius: 4px;
+    font-size: 1.125rem;
+    font-style: italic;
+    color: #374151;
+    min-height: 3rem;
+}
+
+.block-quote:focus {
+    outline: none;
+    background: #F3F4F6;
+}
+
+.block-quote:empty:before {
+    content: 'Digite a citação...';
+    color: #A0A5AA;
+}
+
+/* Code */
+.block-code-wrapper {
+    background: #0F172A;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.block-code-header {
+    background: #1E293B;
+    padding: 8px 16px;
+    font-size: 12px;
+    color: #94A3B8;
+    font-weight: 500;
+    border-bottom: 1px solid #334155;
+}
+
+.block-code {
+    padding: 1rem;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 14px;
+    color: #E2E8F0;
+    line-height: 1.6;
+    min-height: 4rem;
+    white-space: pre;
+    overflow-x: auto;
+}
+
+.block-code:focus {
+    outline: none;
+}
+
+.block-code:empty:before {
+    content: '// Digite o código aqui...';
+    color: #475569;
+}
+
+/* Divider */
+.block-divider-wrapper {
+    padding: 1.5rem 0;
+    cursor: pointer;
+}
+
+.block-divider-wrapper:focus-within .block-divider-line {
+    border-color: #007CBA;
+}
+
+.block-divider-line {
+    border: none;
+    border-top: 2px solid #DCDCDE;
+    margin: 0;
+    transition: border-color 0.2s;
+}
+
+/* =============================================================================
+   4. FLOATING TOOLBAR (Headings)
+   ============================================================================= */
+
+.heading-floating-toolbar {
+    position: absolute;
+    top: -48px;
+    left: 0;
+    background: #1E1E1E;
+    border-radius: 6px;
+    padding: 6px;
+    display: flex;
+    gap: 4px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    z-index: 10;
+}
+
+.heading-level-btn {
+    padding: 6px 12px;
+    background: transparent;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.heading-level-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.heading-level-btn.active {
+    background: #007CBA;
+}
+
+/* =============================================================================
+   5. ESTADOS ESPECIAIS
+   ============================================================================= */
+
+/* Empty State */
+.block-editor-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 80px 40px;
+    text-align: center;
+}
+
+.block-editor-empty-icon {
+    width: 64px;
+    height: 64px;
+    color: #DCDCDE;
+    margin-bottom: 24px;
+}
+
+.block-editor-empty-title {
+    font-size: 24px;
+    font-weight: 600;
+    color: #1E1E1E;
+    margin-bottom: 12px;
+}
+
+.block-editor-empty-text {
+    font-size: 16px;
+    color: #757575;
+    margin-bottom: 24px;
+}
+
+/* Loading State */
+.block-editor-loading {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.block-editor-spinner {
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Focus States */
+.block-wrapper:focus-within {
+    outline: none;
+}
+
+/* Scrollbar customizado */
+.block-editor-sidebar-right::-webkit-scrollbar,
+.block-inserter-list-wp::-webkit-scrollbar,
+.block-editor-canvas::-webkit-scrollbar {
+    width: 8px;
+}
+
+.block-editor-sidebar-right::-webkit-scrollbar-track,
+.block-inserter-list-wp::-webkit-scrollbar-track,
+.block-editor-canvas::-webkit-scrollbar-track {
+    background: #F0F0F0;
+}
+
+.block-editor-sidebar-right::-webkit-scrollbar-thumb,
+.block-inserter-list-wp::-webkit-scrollbar-thumb,
+.block-editor-canvas::-webkit-scrollbar-thumb {
+    background: #DCDCDE;
+    border-radius: 4px;
+}
+
+.block-editor-sidebar-right::-webkit-scrollbar-thumb:hover,
+.block-inserter-list-wp::-webkit-scrollbar-thumb:hover,
+.block-editor-canvas::-webkit-scrollbar-thumb:hover {
+    background: #A0A5AA;
+}
+
+/* =============================================================================
+   6. PROTEÇÃO DA NAVBAR FILAMENT - NÃO MEXER
+   ============================================================================= */
 
 /* Protege navbar do CSS reset do Lafily */
 .platform-navbar,
@@ -44,72 +584,4 @@
     width: 100% !important;
     margin: 0 !important;
     padding: 0 !important;
-}
-
-/* ============================================
-   RESET E ESTILOS BASE - APENAS PARA EDITOR
-   ============================================ */
-
-/* NÃO afeta elementos fora do .block-editor-main-container */
-/* EXCEÇÃO: Não afeta .platform-navbar (para preservar estilos do Filament/Tailwind) */
-.block-editor-main-container *:not(.platform-navbar):not(.platform-navbar *) {
-    box-sizing: border-box;
-}
-
-.block-editor-main-container {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
-    font-size: 14px;
-    line-height: 1.5;
-}
-
-.block-editor-wrapper {
-    background: var(--color-muted);
-    color: var(--color-text);
-}
-
-/* Normalize button - APENAS PARA EDITOR (exclui navbar) */
-.block-editor-main-container button:not(.platform-navbar button):not(.platform-navbar * button) {
-    font-family: inherit;
-    cursor: pointer;
-    border: none;
-    background: none;
-    color: inherit;
-}
-
-/* Normalize input - APENAS PARA EDITOR (exclui navbar) */
-.block-editor-main-container input:not(.platform-navbar input):not(.platform-navbar * input),
-.block-editor-main-container textarea:not(.platform-navbar textarea):not(.platform-navbar * textarea),
-.block-editor-main-container select:not(.platform-navbar select):not(.platform-navbar * select) {
-    font-family: inherit;
-    font-size: inherit;
-    color: inherit;
-}
-
-/* Remove default margins - APENAS PARA EDITOR (exclui navbar) */
-.block-editor-main-container h1:not(.platform-navbar h1):not(.platform-navbar * h1),
-.block-editor-main-container h2:not(.platform-navbar h2):not(.platform-navbar * h2),
-.block-editor-main-container h3:not(.platform-navbar h3):not(.platform-navbar * h3),
-.block-editor-main-container h4:not(.platform-navbar h4):not(.platform-navbar * h4),
-.block-editor-main-container h5:not(.platform-navbar h5):not(.platform-navbar * h5),
-.block-editor-main-container h6:not(.platform-navbar h6):not(.platform-navbar * h6),
-.block-editor-main-container p:not(.platform-navbar p):not(.platform-navbar * p) {
-    margin: 0;
-    padding: 0;
-}
-
-/* Utility classes */
-.block-editor-hidden {
-    display: none !important;
-}
-
-.block-editor-sr-only {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    padding: 0;
-    margin: -1px;
-    overflow: hidden;
-    clip: rect(0, 0, 0, 0);
-    white-space: nowrap;
-    border-width: 0;
 }

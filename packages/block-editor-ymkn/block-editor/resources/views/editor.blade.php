@@ -1,11 +1,11 @@
 {{-- Block Editor Main Layout - Gutenberg Style --}}
 
 {{-- External CSS --}}
-<link rel="stylesheet" href="/packages/block-editor-ymkn/block-editor/resources/css/block-editor.css">
+<link rel="stylesheet" href="{{ asset('vendor/block-editor/css/block-editor.css') }}">
 
 {{-- External JavaScript (Block Types + Core Logic) --}}
-<script type="module" src="/packages/block-editor-ymkn/block-editor/resources/js/block-types.js"></script>
-<script type="module" src="/packages/block-editor-ymkn/block-editor/resources/js/BlockEditorCore.js"></script>
+<script type="module" src="{{ asset('vendor/block-editor/js/block-types.js') }}"></script>
+<script type="module" src="{{ asset('vendor/block-editor/js/BlockEditorCore.js') }}"></script>
 
 <div 
     class="block-editor-layout" 
