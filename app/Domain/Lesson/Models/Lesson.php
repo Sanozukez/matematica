@@ -129,5 +129,13 @@ class Lesson extends Model
             self::TYPE_GAME => 'Mini Jogo',
         ];
     }
+    
+    /**
+     * Define que o model usa 'id' como chave de rota (suporte a ULID)
+     */
+    public function getRouteKeyName(): string
+    {
+        return 'id';
+    }
 }
 

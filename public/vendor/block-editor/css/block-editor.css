@@ -10,6 +10,9 @@
  * 6. Proteções (Navbar Filament)
  */
 
+/* Importa cores Tailwind (264 cores: 24 famílias × 11 tons) */
+@import 'tailwind-colors.css';
+
 /* =============================================================================
    0. UTILITÁRIOS
    ============================================================================= */
@@ -156,7 +159,7 @@
 }
 
 .lesson-title-wrapper.shifted {
-    margin-left: 140px; /* Empurra para DIREITA (metade da sidebar 280px / 2) */
+    margin-left: 280px; /* Empurra para DIREITA (mesma distância do canvas) */
 }
 
 /* Canvas (área central editável) */
@@ -906,4 +909,27 @@
     width: 100% !important;
     margin: 0 !important;
     padding: 0 !important;
+}
+
+/* =============================================================================
+   7. ESTILOS DE ALINHAMENTO DE BLOCOS
+   ============================================================================= */
+
+/* Alinhamento de texto nos blocos editáveis */
+.text-left { 
+    text-align: left !important; 
+}
+
+.text-center { 
+    text-align: center !important;
+    padding-left: 60px !important;
+    padding-right: 60px !important;
+}
+
+.text-right { 
+    text-align: right !important; 
+}
+
+.text-justify { 
+    text-align: justify !important; 
 }
