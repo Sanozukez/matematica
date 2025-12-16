@@ -1,661 +1,120 @@
 {{-- Block Editor Main Layout - Gutenberg Style --}}
 
-{{-- Block Editor Core Logic (inline para evitar build process) --}}
-<script>
-    function BlockEditorCore() {
-        return {
-            // Estado
-            blocks: [],
-            focusedBlockId: null,
-            lessonId: null,
-            isSaving: false,
-            showBlockInserter: false,
-            blockSearchQuery: '',
-            
-            // Tipos de blocos disponíveis (com Heroicons)
-            blockTypes: [
-                { 
-                    type: 'paragraph', 
-                    label: 'Parágrafo', 
-                    icon: '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" /></svg>',
-                    description: 'Texto simples com formatação'
-                },
-                { 
-                    type: 'heading', 
-                    label: 'Título', 
-                    icon: '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 5.25h16.5m-16.5 4.5h16.5m-16.5 4.5h16.5m-16.5 4.5h16.5" /></svg>',
-                    description: 'Títulos H1 a H6'
-                },
-                { 
-                    type: 'image', 
-                    label: 'Imagem', 
-                    icon: '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5H3.75A1.5 1.5 0 0 0 2.25 6v12a1.5 1.5 0 0 0 1.5 1.5Zm10.5-11.25h.008v.008h-.008V8.25Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" /></svg>',
-                    description: 'Upload ou URL de imagem'
-                },
-                { 
-                    type: 'video', 
-                    label: 'Vídeo', 
-                    icon: '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m15.75 10.5 4.72-4.72a.75.75 0 0 1 1.28.53v11.38a.75.75 0 0 1-1.28.53l-4.72-4.72M4.5 18.75h9a2.25 2.25 0 0 0 2.25-2.25v-9a2.25 2.25 0 0 0-2.25-2.25h-9A2.25 2.25 0 0 0 2.25 7.5v9a2.25 2.25 0 0 0 2.25 2.25Z" /></svg>',
-                    description: 'YouTube, Vimeo ou arquivo'
-                },
-                { 
-                    type: 'code', 
-                    label: 'Código', 
-                    icon: '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M17.25 6.75 22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3-4.5 16.5" /></svg>',
-                    description: 'Bloco de código com syntax highlight'
-                },
-                { 
-                    type: 'quote', 
-                    label: 'Citação', 
-                    icon: '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M7.5 8.25h9m-9 3H12m-9.75 1.51c0 1.6 1.123 2.994 2.707 3.227 1.129.166 2.27.293 3.423.379.35.026.67.21.865.501L12 21l2.755-4.133a1.14 1.14 0 0 1 .865-.501 48.172 48.172 0 0 0 3.423-.379c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0 0 12 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018Z" /></svg>',
-                    description: 'Bloco de citação destacada'
-                },
-                { 
-                    type: 'alert', 
-                    label: 'Alerta', 
-                    icon: '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z" /></svg>',
-                    description: 'Aviso, info, sucesso ou erro'
-                },
-                { 
-                    type: 'list', 
-                    label: 'Lista', 
-                    icon: '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 6.75h12M8.25 12h12m-12 5.25h12M3.75 6.75h.007v.008H3.75V6.75Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0ZM3.75 12h.007v.008H3.75V12Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm-.375 5.25h.007v.008H3.75v-.008Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" /></svg>',
-                    description: 'Lista ordenada ou não ordenada'
-                },
-                { 
-                    type: 'latex', 
-                    label: 'Fórmula LaTeX', 
-                    icon: '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 15.75V18m-7.5-6.75h.008v.008H8.25v-.008Zm0 2.25h.008v.008H8.25V13.5Zm0 2.25h.008v.008H8.25v-.008Zm0 2.25h.008v.008H8.25V18Zm2.498-6.75h.007v.008h-.007v-.008Zm0 2.25h.007v.008h-.007V13.5Zm0 2.25h.007v.008h-.007v-.008Zm0 2.25h.007v.008h-.007V18Zm2.504-6.75h.008v.008h-.008v-.008Zm0 2.25h.008v.008h-.008V13.5ZM8.25 6h7.5v2.25h-7.5V6ZM12 2.25c-1.892 0-3.758.11-5.593.322C5.307 2.7 4.5 3.65 4.5 4.757V19.5a2.25 2.25 0 0 0 2.25 2.25h10.5a2.25 2.25 0 0 0 2.25-2.25V4.757c0-1.108-.806-2.057-1.907-2.185A48.507 48.507 0 0 0 12 2.25Z" /></svg>',
-                    description: 'Equações matemáticas'
-                },
-                { 
-                    type: 'divider', 
-                    label: 'Divisor', 
-                    icon: '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14" /></svg>',
-                    description: 'Linha separadora horizontal'
-                },
-                { 
-                    type: 'table', 
-                    label: 'Tabela', 
-                    icon: '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.375 19.5h17.25m-17.25 0a1.125 1.125 0 0 1-1.125-1.125M3.375 19.5h7.5c.621 0 1.125-.504 1.125-1.125m-9.75 0V5.625m0 12.75v-1.5c0-.621.504-1.125 1.125-1.125m18.375 2.625V5.625m0 12.75c0 .621-.504 1.125-1.125 1.125m1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125m0 3.75h-7.5A1.125 1.125 0 0 1 12 18.375m9.75-12.75c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125m19.5 0v1.5c0 .621-.504 1.125-1.125 1.125M2.25 5.625v1.5c0 .621.504 1.125 1.125 1.125m0 0h17.25m-17.25 0h7.5c.621 0 1.125.504 1.125 1.125M3.375 8.25c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125m17.25-3.75h-7.5c-.621 0-1.125.504-1.125 1.125m8.625-1.125c.621 0 1.125.504 1.125 1.125v1.5c0 .621-.504 1.125-1.125 1.125m-17.25 0h7.5m-7.5 0c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125M12 10.875v-1.5m0 1.5c0 .621-.504 1.125-1.125 1.125M12 10.875c0 .621.504 1.125 1.125 1.125m-2.25 0c.621 0 1.125.504 1.125 1.125M13.125 12h7.5m-7.5 0c-.621 0-1.125.504-1.125 1.125M20.625 12c.621 0 1.125.504 1.125 1.125v1.5c0 .621-.504 1.125-1.125 1.125m-17.25 0h7.5M12 14.625v-1.5m0 1.5c0 .621-.504 1.125-1.125 1.125M12 14.625c0 .621.504 1.125 1.125 1.125m-2.25 0c.621 0 1.125.504 1.125 1.125m0 1.5v-1.5m0 0c0-.621.504-1.125 1.125-1.125m0 0h7.5" /></svg>',
-                    description: 'Tabela de dados'
-                }
-            ],
-            filteredBlockTypes: [],
-            
-            /**
-             * Inicialização do editor
-             */
-            init() {
-                // Captura o ID da lesson da URL
-                const urlParts = window.location.pathname.split('/');
-                const lessonIndex = urlParts.indexOf('lessons');
-                if (lessonIndex !== -1 && urlParts[lessonIndex + 1]) {
-                    this.lessonId = urlParts[lessonIndex + 1];
-                }
-                
-                // Inicializa lista filtrada com todos os blocos
-                this.filteredBlockTypes = [...this.blockTypes];
-                
-                // Carrega blocos salvos (se existir)
-                this.loadBlocks();
-                
-                console.log('Block Editor iniciado', { lessonId: this.lessonId });
-            },
-            
-            /**
-             * Filtra blocos na busca
-             */
-            filterBlocks() {
-                const query = this.blockSearchQuery.toLowerCase();
-                if (!query) {
-                    this.filteredBlockTypes = [...this.blockTypes];
-                    return;
-                }
-                
-                this.filteredBlockTypes = this.blockTypes.filter(block => 
-                    block.label.toLowerCase().includes(query) ||
-                    block.description.toLowerCase().includes(query)
-                );
-            },
-            
-            /**
-             * Abre popup de seleção de blocos
-             */
-            openBlockInserter() {
-                this.showBlockInserter = true;
-                this.blockSearchQuery = '';
-                this.filteredBlockTypes = [...this.blockTypes];
-            },
-            
-            /**
-             * Insere bloco a partir do modal
-             */
-            insertBlockFromModal(type) {
-                this.addBlock(type);
-                this.showBlockInserter = false;
-            },
-            
-            /**
-             * Carrega blocos do servidor
-             */
-            async loadBlocks() {
-                if (!this.lessonId) return;
-                
-                try {
-                    const response = await fetch(`/api/lessons/${this.lessonId}/blocks`);
-                    if (response.ok) {
-                        const data = await response.json();
-                        this.blocks = data.blocks || [];
-                    }
-                } catch (error) {
-                    console.log('Nenhum bloco salvo ainda');
-                }
-            },
-            
-            /**
-             * Adiciona novo bloco
-             */
-            addBlock(type = 'paragraph', afterIndex = null) {
-                const newBlock = {
-                    id: this.generateBlockId(),
-                    type: type,
-                    content: '',
-                    attributes: {}
-                };
-                
-                if (afterIndex !== null) {
-                    this.blocks.splice(afterIndex + 1, 0, newBlock);
-                } else {
-                    this.blocks.push(newBlock);
-                }
-                
-                // Foca no novo bloco após renderização
-                this.$nextTick(() => {
-                    this.focusBlock(newBlock.id);
-                });
-                
-                return newBlock;
-            },
-            
-            /**
-             * Remove bloco
-             */
-            removeBlock(blockId) {
-                const index = this.blocks.findIndex(b => b.id === blockId);
-                if (index === -1) return;
-                
-                // Se é o único bloco, apenas limpa o conteúdo
-                if (this.blocks.length === 1) {
-                    this.blocks[0].content = '';
-                    this.focusBlock(this.blocks[0].id);
-                    return;
-                }
-                
-                // Remove o bloco
-                this.blocks.splice(index, 1);
-                
-                // Foca no bloco anterior ou próximo
-                const newFocusIndex = index > 0 ? index - 1 : 0;
-                if (this.blocks[newFocusIndex]) {
-                    this.$nextTick(() => {
-                        this.focusBlock(this.blocks[newFocusIndex].id);
-                    });
-                }
-            },
-            
-            /**
-             * Atualiza conteúdo de um bloco
-             */
-            updateBlockContent(blockId, content) {
-                const block = this.blocks.find(b => b.id === blockId);
-                if (block) {
-                    block.content = content;
-                }
-            },
-            
-            /**
-             * Foca em um bloco específico
-             */
-            focusBlock(blockId) {
-                this.focusedBlockId = blockId;
-                const element = document.querySelector(`[data-block-id="${blockId}"]`);
-                if (element) {
-                    const editable = element.querySelector('[contenteditable="true"]');
-                    if (editable) {
-                        editable.focus();
-                        this.moveCursorToEnd(editable);
-                    }
-                }
-            },
-            
-            /**
-             * Move cursor para o final do elemento
-             */
-            moveCursorToEnd(element) {
-                const range = document.createRange();
-                const selection = window.getSelection();
-                range.selectNodeContents(element);
-                range.collapse(false);
-                selection.removeAllRanges();
-                selection.addRange(range);
-            },
-            
-            /**
-             * Handler de tecla Enter
-             */
-            handleEnter(event, blockId) {
-                event.preventDefault();
-                
-                const block = this.blocks.find(b => b.id === blockId);
-                if (!block) return;
-                
-                // Cria novo bloco
-                const index = this.blocks.findIndex(b => b.id === blockId);
-                this.addBlock(block.type, index);
-            },
-            
-            /**
-             * Handler de tecla Backspace
-             */
-            handleBackspace(event, blockId) {
-                const element = event.target;
-                const selection = window.getSelection();
-                const isAtStart = selection.anchorOffset === 0;
-                
-                // Se cursor está no início e conteúdo vazio, remove bloco
-                if (isAtStart && !element.textContent.trim()) {
-                    event.preventDefault();
-                    this.removeBlock(blockId);
-                }
-            },
-            
-            /**
-             * Gera ID único para bloco
-             */
-            generateBlockId() {
-                return `block_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-            },
-            
-            /**
-             * Serializa blocos para JSON (estrutura simplificada)
-             * Ordem é implícita pelo índice do array
-             */
-            toJSON() {
-                return {
-                    blocks: this.blocks.map(block => ({
-                        id: block.id,
-                        type: block.type,
-                        content: block.content,
-                        attributes: block.attributes
-                    }))
-                };
-            },
-            
-            /**
-             * Salva blocos no servidor
-             */
-            async save() {
-                if (!this.lessonId) {
-                    alert('ID da aula não encontrado');
-                    return;
-                }
-                
-                this.isSaving = true;
-                
-                try {
-                    const response = await fetch(`/api/lessons/${this.lessonId}/blocks`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-                        },
-                        body: JSON.stringify(this.toJSON())
-                    });
-                    
-                    if (response.ok) {
-                        console.log('Blocos salvos com sucesso');
-                    } else {
-                        throw new Error('Erro ao salvar');
-                    }
-                } catch (error) {
-                    console.error('Erro ao salvar blocos:', error);
-                    alert('Erro ao salvar conteúdo');
-                } finally {
-                    this.isSaving = false;
-                }
-            },
-            
-            /**
-             * Cria bloco inicial quando clicar no empty state
-             */
-            startWriting() {
-                if (this.blocks.length === 0) {
-                    this.addBlock('paragraph');
-                }
-            },
-            
-            /**
-             * Adiciona parágrafo ao clicar no canvas vazio (estilo WordPress)
-             * Quando clica abaixo do último bloco, cria novo parágrafo
-             */
-            handleCanvasClick(event) {
-                // Verifica se clicou diretamente no container (não em um bloco)
-                if (event.target.classList.contains('block-editor-blocks')) {
-                    // Se não há blocos, cria o primeiro
-                    if (this.blocks.length === 0) {
-                        this.startWriting();
-                        return;
-                    }
-                    
-                    // Se já há blocos, adiciona parágrafo no final
-                    this.addBlock('paragraph');
-                }
-            }
-        };
-    }
-</script>
+{{-- External CSS --}}
+<link rel="stylesheet" href="/packages/block-editor-ymkn/block-editor/resources/css/block-editor.css">
+
+{{-- External JavaScript (Block Types + Core Logic) --}}
+<script type="module" src="/packages/block-editor-ymkn/block-editor/resources/js/block-types.js"></script>
+<script type="module" src="/packages/block-editor-ymkn/block-editor/resources/js/BlockEditorCore.js"></script>
 
 <div 
-    class="block-editor-container" 
+    class="block-editor-layout" 
     x-data="BlockEditorCore()"
     x-init="init()"
 >
-    <style>
-        /* Block Editor - Isolated Gutenberg-style Layout */
-        .block-editor-container {
-            display: flex;
-            flex-direction: column;
-            height: calc(100vh - 65px); /* 65px = navbar height */
-            background: #FFFFFF;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
-        }
-
-        /* Top Toolbar - Sticky */
-        .block-editor-toolbar {
-            position: sticky;
-            top: 65px; /* Below navbar */
-            height: 65px;
-            background: #FFFFFF;
-            border-bottom: 1px solid #DCDCDE;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 1.5rem;
-            z-index: 100;
-            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-        }
-
-        .block-editor-toolbar-left {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .block-editor-logo-box {
-            width: 65px;
-            height: 65px;
-            background: #000000;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 0;
-        }
-
-        .block-editor-logo-box svg {
-            width: 32px;
-            height: 32px;
-            color: #FFFFFF;
-        }
-
-        .block-editor-add-block-btn {
-            width: 32px;
-            height: 32px;
-            background: #007CBA;
-            border: none;
-            border-radius: 2px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: background-color 0.2s;
-        }
-
-        .block-editor-add-block-btn:hover {
-            background: #005a87;
-        }
-
-        .block-editor-add-block-btn svg {
-            width: 12px;
-            height: 12px;
-            color: #FFFFFF;
-        }
-
-        .block-editor-save-btn {
-            background: #007CBA;
-            color: #FFFFFF;
-            border: none;
-            border-radius: 2px;
-            padding: 0.5rem 1.5rem;
-            font-size: 0.875rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: background-color 0.2s;
-        }
-
-        .block-editor-save-btn:hover {
-            background: #005a87;
-        }
-
-        /* Main Content Area */
-        .block-editor-main {
-            display: flex;
-            flex: 1;
-            overflow: hidden;
-        }
-
-        /* Editor Canvas */
-        .block-editor-canvas {
-            flex: 1;
-            overflow-y: auto;
-            padding: 2rem;
-            background: #F0F0F0;
-        }
-
-        .block-editor-canvas-inner {
-            max-width: 840px;
-            margin: 0 auto;
-            background: #FFFFFF;
-            border: 1px solid #DCDCDE;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-            min-height: calc(100vh - 200px);
-        }
-
-        /* Right Sidebar - Fixed */
-        .block-editor-sidebar {
-            width: 280px;
-            background: #FFFFFF;
-            border-left: 1px solid #DCDCDE;
-            overflow-y: auto;
-            flex-shrink: 0;
-        }
-
-        .block-editor-sidebar-header {
-            padding: 1rem;
-            border-bottom: 1px solid #DCDCDE;
-            font-size: 0.875rem;
-            font-weight: 600;
-            color: #1E1E1E;
-        }
-
-        .block-editor-sidebar-content {
-            padding: 1rem;
-        }
-
-        .block-editor-sidebar-section {
-            margin-bottom: 1.5rem;
-        }
-
-        .block-editor-sidebar-section-title {
-            font-size: 0.75rem;
-            font-weight: 600;
-            color: #757575;
-            text-transform: uppercase;
-            margin-bottom: 0.5rem;
-            letter-spacing: 0.5px;
-        }
-
-        /* Blocks Container */
-        .block-editor-blocks {
-            padding: 2rem;
-        }
-
-        .block-editor-empty-state {
-            padding: 4rem 2rem;
-            text-align: center;
-            color: #757575;
-        }
-
-        .block-editor-empty-state-icon {
-            width: 48px;
-            height: 48px;
-            margin: 0 auto 1rem;
-            color: #DCDCDE;
-        }
-
-        .block-editor-empty-state-text {
-            font-size: 1rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .block-editor-empty-state-hint {
-            font-size: 0.875rem;
-            color: #949494;
-        }
-
-        /* Responsive */
-        @media (max-width: 1024px) {
-            .block-editor-sidebar {
-                position: fixed;
-                right: -280px;
-                top: 130px; /* navbar + toolbar */
-                bottom: 0;
-                z-index: 99;
-                transition: right 0.3s;
-            }
-
-            .block-editor-sidebar.open {
-                right: 0;
-            }
-        }
-    </style>
-
     {{-- Top Toolbar --}}
     <div class="block-editor-toolbar">
         <div class="block-editor-toolbar-left">
-            {{-- Logo Box with Open Book Icon --}}
-            <div class="block-editor-logo-box">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
-                </svg>
-            </div>
+            <span class="block-editor-logo">Editor de Conteúdo</span>
 
             {{-- Add Block Button --}}
-            <button class="block-editor-add-block-btn" title="Adicionar Bloco" @click="openBlockInserter()">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor">
+            <button class="block-editor-btn block-editor-btn-secondary" @click="openBlockInserter()">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" style="width: 20px; height: 20px;">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
                 </svg>
+                Adicionar Bloco
             </button>
         </div>
 
-        {{-- Save Button --}}
-        <button class="block-editor-save-btn" @click="save()" :disabled="isSaving">
-            <span x-show="!isSaving">Salvar</span>
-            <span x-show="isSaving">Salvando...</span>
-        </button>
+        <div class="block-editor-toolbar-right">
+            {{-- Save Button --}}
+            <button class="block-editor-btn block-editor-btn-primary" @click="save()" :disabled="isSaving">
+                <template x-if="!isSaving">
+                    <span>Salvar</span>
+                </template>
+                <template x-if="isSaving">
+                    <span class="block-editor-loading">
+                        <span class="block-editor-spinner"></span>
+                        Salvando...
+                    </span>
+                </template>
+            </button>
+        </div>
     </div>
 
     {{-- Main Content Area --}}
     <div class="block-editor-main">
         {{-- Editor Canvas --}}
-        <div class="block-editor-canvas">
-            <div class="block-editor-canvas-inner">
-                <div class="block-editor-blocks" @click="handleCanvasClick($event)">
-                    {{-- Empty State --}}
-                    <div 
-                        class="block-editor-empty-state" 
-                        x-show="blocks.length === 0"
-                        @click="startWriting()"
-                        style="cursor: pointer;"
-                    >
-                        <svg class="block-editor-empty-state-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
-                        </svg>
-                        <div class="block-editor-empty-state-text">
-                            Começar a escrever ou clique no botão + para adicionar um bloco
-                        </div>
-                        <div class="block-editor-empty-state-hint">
-                            Use blocos para adicionar texto, imagens, vídeos e mais
-                        </div>
+        <div class="block-editor-canvas" :class="{ 'shifted': canvasShifted }">
+            <div class="block-editor-blocks" @click="handleCanvasClick($event)">
+                {{-- Empty State --}}
+                <div 
+                    class="block-editor-empty" 
+                    x-show="blocks.length === 0"
+                    @click="startWriting()"
+                    style="cursor: pointer;"
+                >
+                    <svg class="block-editor-empty-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
+                    </svg>
+                    <div class="block-editor-empty-title">
+                        Comece a criar
                     </div>
-
-                    {{-- Blocks Rendering --}}
-                    <template x-for="block in blocks" :key="block.id">
-                        <div>
-                            <template x-if="block.type === 'paragraph'">
-                                @include('block-editor-ymkn::blocks.paragraph')
-                            </template>
-                            
-                            <template x-if="block.type === 'heading'">
-                                @include('block-editor-ymkn::blocks.heading')
-                            </template>
-                            
-                            <template x-if="block.type === 'quote'">
-                                @include('block-editor-ymkn::blocks.quote')
-                            </template>
-                            
-                            <template x-if="block.type === 'code'">
-                                @include('block-editor-ymkn::blocks.code')
-                            </template>
-                            
-                            <template x-if="block.type === 'divider'">
-                                @include('block-editor-ymkn::blocks.divider')
-                            </template>
-                            
-                            {{-- TODO: Adicionar mais tipos conforme necessário --}}
-                        </div>
-                    </template>
+                    <div class="block-editor-empty-text">
+                        Clique aqui ou use o botão "+" para adicionar seu primeiro bloco
+                    </div>
                 </div>
+
+                {{-- Blocks Rendering --}}
+                <template x-for="block in blocks" :key="block.id">
+                    <div>
+                        <template x-if="block.type === 'paragraph'">
+                            @include('block-editor-ymkn::blocks.paragraph')
+                        </template>
+                        
+                        <template x-if="block.type === 'heading'">
+                            @include('block-editor-ymkn::blocks.heading')
+                        </template>
+                        
+                        <template x-if="block.type === 'quote'">
+                            @include('block-editor-ymkn::blocks.quote')
+                        </template>
+                        
+                        <template x-if="block.type === 'code'">
+                            @include('block-editor-ymkn::blocks.code')
+                        </template>
+                        
+                        <template x-if="block.type === 'divider'">
+                            @include('block-editor-ymkn::blocks.divider')
+                        </template>
+                        
+                        {{-- TODO: Implementar image, video, list, alert, latex, table --}}
+                    </div>
+                </template>
             </div>
         </div>
 
-        {{-- Right Sidebar --}}
-        <aside class="block-editor-sidebar">
-            <div class="block-editor-sidebar-header">
-                Documento
+        {{-- Right Sidebar (Document Info) --}}
+        <aside class="block-editor-sidebar-right">
+            <div class="sidebar-section">
+                <div class="sidebar-section-title">Status</div>
+                <div class="sidebar-info-item">Rascunho</div>
             </div>
-            <div class="block-editor-sidebar-content">
-                <div class="block-editor-sidebar-section">
-                    <div class="block-editor-sidebar-section-title">
-                        Status
-                    </div>
-                    <p style="font-size: 0.875rem; color: #1E1E1E;">
-                        Rascunho
-                    </p>
-                </div>
 
-                <div class="block-editor-sidebar-section">
-                    <div class="block-editor-sidebar-section-title">
-                        Blocos
-                    </div>
-                    <p style="font-size: 0.875rem; color: #1E1E1E;">
-                        <span x-text="blocks.length"></span> bloco(s)
-                    </p>
+            <div class="sidebar-section">
+                <div class="sidebar-section-title">Blocos</div>
+                <div class="sidebar-info-item">
+                    <span x-text="blocks.length"></span> bloco(s)
                 </div>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="sidebar-section-title">Último Salvamento</div>
+                <div class="sidebar-info-item">--</div>
             </div>
         </aside>
     </div>
     
-    {{-- Block Inserter Modal --}}
+    {{-- Block Inserter Sidebar (Left) --}}
     @include('block-editor-ymkn::components.block-inserter')
 </div>

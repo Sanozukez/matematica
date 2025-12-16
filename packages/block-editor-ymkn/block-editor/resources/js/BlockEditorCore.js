@@ -9,6 +9,9 @@
  * 
  * Princípio SRP: Apenas lógica de blocos, sem UI direta
  */
+
+import { BLOCK_TYPES } from './block-types.js';
+
 export default function BlockEditorCore() {
     return {
         // Estado
@@ -16,6 +19,13 @@ export default function BlockEditorCore() {
         focusedBlockId: null,
         lessonId: null,
         isSaving: false,
+        showBlockInserter: false,
+        blockSearchQuery: '',
+        canvasShifted: false, // Canvas empurrado para direita
+        
+        // Tipos de blocos disponíveis
+        blockTypes: BLOCK_TYPES,
+        filteredBlockTypes: [],
         
         /**
          * Inicialização do editor
@@ -28,13 +38,55 @@ export default function BlockEditorCore() {
                 this.lessonId = urlParts[lessonIndex + 1];
             }
             
+            // Inicializa lista filtrada com todos os blocos
+            this.filteredBlockTypes = [...this.blockTypes];
+            
             // Carrega blocos salvos (se existir)
             this.loadBlocks();
             
-            // Se não há blocos, mostra empty state
-            if (this.blocks.length === 0) {
-                console.log('Editor iniciado: canvas vazio');
+            console.log('Block Editor iniciado', { lessonId: this.lessonId });
+        },
+        
+        /**
+         * Filtra blocos na busca
+         */
+        filterBlocks() {
+            const query = this.blockSearchQuery.toLowerCase();
+            if (!query) {
+                this.filteredBlockTypes = [...this.blockTypes];
+                return;
             }
+            
+            this.filteredBlockTypes = this.blockTypes.filter(block => 
+                block.label.toLowerCase().includes(query) ||
+                block.description.toLowerCase().includes(query)
+            );
+        },
+        
+        /**
+         * Abre sidebar de blocos e empurra canvas
+         */
+        openBlockInserter() {
+            this.showBlockInserter = true;
+            this.canvasShifted = true;
+            this.blockSearchQuery = '';
+            this.filteredBlockTypes = [...this.blockTypes];
+        },
+        
+        /**
+         * Fecha sidebar e retorna canvas
+         */
+        closeBlockInserter() {
+            this.showBlockInserter = false;
+            this.canvasShifted = false;
+        },
+        
+        /**
+         * Insere bloco a partir do modal
+         */
+        insertBlockFromModal(type) {
+            this.addBlock(type);
+            this.closeBlockInserter();
         },
         
         /**
@@ -56,24 +108,18 @@ export default function BlockEditorCore() {
         
         /**
          * Adiciona novo bloco
-         * @param {string} type - Tipo do bloco (paragraph, heading, etc)
-         * @param {number|null} afterIndex - Índice para inserir após (null = final)
          */
         addBlock(type = 'paragraph', afterIndex = null) {
             const newBlock = {
                 id: this.generateBlockId(),
                 type: type,
                 content: '',
-                order: this.blocks.length,
-                attributes: {} // Metadados específicos do bloco (ex: level para heading)
+                attributes: {}
             };
             
             if (afterIndex !== null) {
-                // Insere após um bloco específico
                 this.blocks.splice(afterIndex + 1, 0, newBlock);
-                this.reorderBlocks();
             } else {
-                // Adiciona no final
                 this.blocks.push(newBlock);
             }
             
@@ -101,7 +147,6 @@ export default function BlockEditorCore() {
             
             // Remove o bloco
             this.blocks.splice(index, 1);
-            this.reorderBlocks();
             
             // Foca no bloco anterior ou próximo
             const newFocusIndex = index > 0 ? index - 1 : 0;
@@ -142,7 +187,6 @@ export default function BlockEditorCore() {
                 const editable = element.querySelector('[contenteditable="true"]');
                 if (editable) {
                     editable.focus();
-                    // Move cursor para o final
                     this.moveCursorToEnd(editable);
                 }
             }
@@ -162,7 +206,6 @@ export default function BlockEditorCore() {
         
         /**
          * Handler de tecla Enter
-         * Comportamento Gutenberg: criar novo bloco do mesmo tipo
          */
         handleEnter(event, blockId) {
             event.preventDefault();
@@ -170,39 +213,15 @@ export default function BlockEditorCore() {
             const block = this.blocks.find(b => b.id === blockId);
             if (!block) return;
             
-            const selection = window.getSelection();
-            const range = selection.getRangeAt(0);
-            const element = event.target;
-            
-            // Captura texto após o cursor
-            const textAfterCursor = this.getTextAfterCursor(element, range);
-            
-            // Se houver texto após cursor, move para novo bloco
-            if (textAfterCursor) {
-                // Remove texto após cursor do bloco atual
-                range.deleteContents();
-                const textBeforeCursor = element.textContent;
-                this.updateBlockContent(blockId, textBeforeCursor);
-            }
-            
-            // Cria novo bloco (mesmo tipo por padrão)
+            // Cria novo bloco
             const index = this.blocks.findIndex(b => b.id === blockId);
-            const newBlock = this.addBlock(block.type, index);
-            
-            // Se havia texto após cursor, coloca no novo bloco
-            if (textAfterCursor) {
-                newBlock.content = textAfterCursor;
-            }
+            this.addBlock(block.type, index);
         },
         
         /**
          * Handler de tecla Backspace
-         * Comportamento Gutenberg: mesclar com bloco anterior se vazio
          */
         handleBackspace(event, blockId) {
-            const block = this.blocks.find(b => b.id === blockId);
-            if (!block) return;
-            
             const element = event.target;
             const selection = window.getSelection();
             const isAtStart = selection.anchorOffset === 0;
@@ -215,25 +234,6 @@ export default function BlockEditorCore() {
         },
         
         /**
-         * Captura texto após o cursor
-         */
-        getTextAfterCursor(element, range) {
-            const clone = range.cloneRange();
-            clone.selectNodeContents(element);
-            clone.setStart(range.endContainer, range.endOffset);
-            return clone.toString();
-        },
-        
-        /**
-         * Reordena blocos após inserção/remoção
-         */
-        reorderBlocks() {
-            this.blocks.forEach((block, index) => {
-                block.order = index;
-            });
-        },
-        
-        /**
          * Gera ID único para bloco
          */
         generateBlockId() {
@@ -241,16 +241,36 @@ export default function BlockEditorCore() {
         },
         
         /**
-         * Serializa blocos para JSON
+         * Handler de clique no canvas
+         * Adiciona parágrafo ao clicar abaixo do último bloco
+         */
+        handleCanvasClick(event) {
+            // Se clicou diretamente no container de blocos (não em um bloco filho)
+            if (event.target.classList.contains('block-editor-blocks')) {
+                // Verifica se último bloco é parágrafo vazio
+                const lastBlock = this.blocks[this.blocks.length - 1];
+                
+                // Se último bloco é parágrafo vazio, não adiciona novo
+                if (lastBlock && lastBlock.type === 'paragraph' && !lastBlock.content.trim()) {
+                    this.focusBlock(lastBlock.id);
+                    return;
+                }
+                
+                // Adiciona novo parágrafo
+                this.addBlock('paragraph');
+            }
+        },
+        
+        /**
+         * Serializa blocos para JSON (estrutura simplificada)
+         * Ordem é implícita pelo índice do array
          */
         toJSON() {
             return {
-                lesson_id: this.lessonId,
                 blocks: this.blocks.map(block => ({
                     id: block.id,
                     type: block.type,
                     content: block.content,
-                    order: block.order,
                     attributes: block.attributes
                 }))
             };
@@ -279,7 +299,6 @@ export default function BlockEditorCore() {
                 
                 if (response.ok) {
                     console.log('Blocos salvos com sucesso');
-                    // Pode adicionar notificação de sucesso aqui
                 } else {
                     throw new Error('Erro ao salvar');
                 }
@@ -301,3 +320,6 @@ export default function BlockEditorCore() {
         }
     };
 }
+
+// Exporta para uso global (Alpine.js)
+window.BlockEditorCore = BlockEditorCore;
