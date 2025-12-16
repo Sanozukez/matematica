@@ -724,8 +724,8 @@
     display: flex;
     flex-direction: column;
     gap: 1px;
-    max-height: 400px;
-    max-width: 250px;
+    max-height: 600px;
+    min-width: 260px;
     overflow-y: auto;
     overflow-x: hidden;
 }
@@ -933,4 +933,48 @@
 
 .text-justify { 
     text-align: justify !important; 
+}
+
+/* =============================================================================
+   8. TOASTER DE SALVAMENTO
+   ============================================================================= */
+
+.save-toast {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background: #10b981;
+    color: white;
+    padding: 12px 24px;
+    border-radius: 8px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+    font-size: 14px;
+    font-weight: 500;
+    z-index: 9999;
+}
+
+/* =============================================================================
+   9. RESPONSIVE - MOBILE
+   ============================================================================= */
+
+@media (max-width: 768px) {
+    /* Oculta sidebar direita em mobile */
+    .block-editor-sidebar-right {
+        display: none;
+    }
+    
+    /* Canvas ocupa 100% */
+    .block-editor-content {
+        width: 100%;
+    }
+    
+    /* Reduz padding do canvas */
+    .block-editor-canvas {
+        padding: 20px 20px 60px 20px;
+    }
+    
+    /* Título mais compacto */
+    .lesson-title-wrapper {
+        padding: 20px 20px 10px 20px;
+    }
 }

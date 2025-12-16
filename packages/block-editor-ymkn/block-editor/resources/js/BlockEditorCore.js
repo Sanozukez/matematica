@@ -18,7 +18,11 @@ window.BlockEditorCore = function() {
         blocks: [],
         focusedBlockId: null,
         lessonId: null,
+        lessonTitle: '',
         isSaving: false,
+        hasChanges: false,
+        showSaveToast: false,
+        saveToastMessage: '',
         showBlockInserter: false,
         blockSearchQuery: '',
         canvasShifted: false, // Canvas empurrado para direita
@@ -44,7 +48,25 @@ window.BlockEditorCore = function() {
             // Carrega blocos salvos (se existir)
             this.loadBlocks();
             
+            // Watcher para auto-save (debounced 2 segundos)
+            this.$watch('blocks', () => {
+                this.hasChanges = true;
+                this.debouncedSave();
+            });
+            
             console.log('Block Editor iniciado', { lessonId: this.lessonId });
+        },
+        
+        /**
+         * Debounce para auto-save (2 segundos após parar de editar)
+         */
+        debouncedSave() {
+            clearTimeout(this._saveTimeout);
+            this._saveTimeout = setTimeout(() => {
+                if (this.hasChanges) {
+                    this.saveBlocks();
+                }
+            }, 2000);
         },
         
         /**
@@ -82,10 +104,72 @@ window.BlockEditorCore = function() {
                 if (response.ok) {
                     const data = await response.json();
                     this.blocks = data.blocks || [];
+                    this.lessonTitle = data.lesson_title || '';
+                    this.hasChanges = false;
                 }
             } catch (error) {
                 console.log('Nenhum bloco salvo ainda');
             }
+        },
+        
+        /**
+         * Salva blocos no servidor com HTML completo serializado
+         */
+        async saveBlocks() {
+            if (!this.lessonId || this.isSaving) return;
+            
+            this.isSaving = true;
+            
+            try {
+                // Serializa blocos com HTML completo (innerHTML dos contenteditable)
+                const serializedBlocks = this.blocks.map(block => {
+                    const element = document.querySelector(`[data-block-id="${block.id}"]`);
+                    const editable = element?.querySelector('[contenteditable="true"]');
+                    
+                    return {
+                        id: block.id,
+                        type: block.type,
+                        content: editable ? editable.innerHTML : (block.content || ''),
+                        attributes: block.attributes || {}
+                    };
+                });
+                
+                const response = await fetch(`/api/lessons/${this.lessonId}/blocks`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                    },
+                    body: JSON.stringify({ 
+                        blocks: serializedBlocks,
+                        lesson_title: this.lessonTitle
+                    })
+                });
+                
+                if (response.ok) {
+                    this.hasChanges = false;
+                    this.showToast('Salvo com sucesso!', 'success');
+                } else {
+                    this.showToast('Erro ao salvar', 'error');
+                }
+            } catch (error) {
+                console.error('Erro ao salvar:', error);
+                this.showToast('Erro ao salvar', 'error');
+            } finally {
+                this.isSaving = false;
+            }
+        },
+        
+        /**
+         * Exibe toaster de feedback
+         */
+        showToast(message, type = 'success') {
+            this.saveToastMessage = message;
+            this.showSaveToast = true;
+            
+            setTimeout(() => {
+                this.showSaveToast = false;
+            }, 3000);
         },
         
         /**

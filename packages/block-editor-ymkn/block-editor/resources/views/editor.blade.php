@@ -63,7 +63,7 @@
                     type="text" 
                     class="lesson-title-input" 
                     placeholder="Adicionar título"
-                    value="{{ $lesson->title ?? '' }}"
+                    x-model="lessonTitle"
                 >
             </div>
 
@@ -141,4 +141,18 @@
     
     {{-- Block Inserter Sidebar (Left) --}}
     @include('block-editor-ymkn::components.block-inserter')
+    
+    {{-- Toaster de Salvamento --}}
+    <div 
+        class="save-toast"
+        x-show="showSaveToast"
+        x-transition:enter="transition ease-out duration-300"
+        x-transition:enter-start="opacity-0 translate-y-4"
+        x-transition:enter-end="opacity-100 translate-y-0"
+        x-transition:leave="transition ease-in duration-200"
+        x-transition:leave-start="opacity-100 translate-y-0"
+        x-transition:leave-end="opacity-0 translate-y-4"
+    >
+        <span x-text="saveToastMessage"></span>
+    </div>
 </div>

@@ -31,7 +31,8 @@ class LessonBlockController extends Controller
         // TODO: Adicionar autorização quando implementar policies
         
         return response()->json([
-            'blocks' => $lesson->content['blocks'] ?? []
+            'blocks' => $lesson->content['blocks'] ?? [],
+            'lesson_title' => $lesson->title
         ]);
     }
     
@@ -49,6 +50,7 @@ class LessonBlockController extends Controller
             'blocks.*.type' => 'required|string|in:paragraph,heading,image,video,code,quote,alert,list,latex,divider,table',
             'blocks.*.content' => 'nullable|string',
             'blocks.*.attributes' => 'nullable|array',
+            'lesson_title' => 'nullable|string|max:255',
         ]);
         
         if ($validator->fails()) {
@@ -59,6 +61,11 @@ class LessonBlockController extends Controller
         }
         
         // TODO: Adicionar autorização quando implementar policies
+        
+        // Atualiza título se fornecido
+        if ($request->has('lesson_title')) {
+            $lesson->title = $request->input('lesson_title');
+        }
         
         // Salva blocos no content (JSON) - sem lesson_id redundante
         $lesson->content = [
