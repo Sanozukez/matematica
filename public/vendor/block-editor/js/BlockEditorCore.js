@@ -160,6 +160,34 @@ window.BlockEditorCore = function() {
         },
         
         /**
+         * Aplica cor de texto ao bloco (classe Tailwind)
+         */
+        applyTextColor(blockId, colorClass) {
+            const block = this.blocks.find(b => b.id === blockId);
+            if (!block) return;
+            
+            // Atualiza atributos do bloco
+            if (!block.attributes) block.attributes = {};
+            block.attributes.textColor = colorClass;
+            
+            // Aplica classe ao elemento DOM
+            const element = document.querySelector(`[data-block-id="${blockId}"]`);
+            if (element) {
+                const editable = element.querySelector('[contenteditable="true"]');
+                if (editable) {
+                    // Remove todas as classes de cor anteriores
+                    const colorClasses = Array.from(editable.classList).filter(c => c.startsWith('text-'));
+                    colorClasses.forEach(c => editable.classList.remove(c));
+                    
+                    // Adiciona nova classe de cor
+                    if (colorClass) {
+                        editable.classList.add(colorClass);
+                    }
+                }
+            }
+        },
+        
+        /**
          * Foca em um bloco específico
          */
         focusBlock(blockId) {

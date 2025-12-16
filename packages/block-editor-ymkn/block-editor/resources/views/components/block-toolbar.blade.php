@@ -126,7 +126,87 @@
         </div>
     </template>
 
-    {{-- Seção 3: MORE OPTIONS (todos os blocos) --}}
+    {{-- Seção 3: SELETOR DE CORES (blocos de texto) + MORE OPTIONS --}}
+    <template x-if="['paragraph', 'heading', 'quote'].includes(block.type)">
+        <div class="block-toolbar-section">
+            <div class="block-toolbar-divider"></div>
+            
+            {{-- Seletor de Cores com Dropdown --}}
+            <div class="block-toolbar-color-picker" x-data="{ showColors: false }">
+                <button 
+                    class="block-toolbar-btn"
+                    @click="showColors = !showColors"
+                    title="Cor do texto"
+                >
+                    <span class="material-icons">palette</span>
+                </button>
+                
+                {{-- Grid de Cores Tailwind --}}
+                <div 
+                    x-show="showColors"
+                    @click.outside="showColors = false"
+                    x-transition:enter="transition ease-out duration-100"
+                    x-transition:enter-start="opacity-0 scale-95"
+                    x-transition:enter-end="opacity-100 scale-100"
+                    class="block-toolbar-color-grid"
+                >
+                    {{-- Red --}}
+                    <div class="color-row">
+                        <button class="color-swatch bg-red-500" title="Red 500" @click="applyTextColor(block.id, 'text-red-500'); showColors = false"></button>
+                        <button class="color-swatch bg-red-600" title="Red 600" @click="applyTextColor(block.id, 'text-red-600'); showColors = false"></button>
+                        <button class="color-swatch bg-red-700" title="Red 700" @click="applyTextColor(block.id, 'text-red-700'); showColors = false"></button>
+                    </div>
+                    {{-- Orange --}}
+                    <div class="color-row">
+                        <button class="color-swatch bg-orange-500" title="Orange 500" @click="applyTextColor(block.id, 'text-orange-500'); showColors = false"></button>
+                        <button class="color-swatch bg-orange-600" title="Orange 600" @click="applyTextColor(block.id, 'text-orange-600'); showColors = false"></button>
+                        <button class="color-swatch bg-orange-700" title="Orange 700" @click="applyTextColor(block.id, 'text-orange-700'); showColors = false"></button>
+                    </div>
+                    {{-- Yellow --}}
+                    <div class="color-row">
+                        <button class="color-swatch bg-yellow-500" title="Yellow 500" @click="applyTextColor(block.id, 'text-yellow-500'); showColors = false"></button>
+                        <button class="color-swatch bg-yellow-600" title="Yellow 600" @click="applyTextColor(block.id, 'text-yellow-600'); showColors = false"></button>
+                        <button class="color-swatch bg-yellow-700" title="Yellow 700" @click="applyTextColor(block.id, 'text-yellow-700'); showColors = false"></button>
+                    </div>
+                    {{-- Green --}}
+                    <div class="color-row">
+                        <button class="color-swatch bg-green-500" title="Green 500" @click="applyTextColor(block.id, 'text-green-500'); showColors = false"></button>
+                        <button class="color-swatch bg-green-600" title="Green 600" @click="applyTextColor(block.id, 'text-green-600'); showColors = false"></button>
+                        <button class="color-swatch bg-green-700" title="Green 700" @click="applyTextColor(block.id, 'text-green-700'); showColors = false"></button>
+                    </div>
+                    {{-- Blue --}}
+                    <div class="color-row">
+                        <button class="color-swatch bg-blue-500" title="Blue 500" @click="applyTextColor(block.id, 'text-blue-500'); showColors = false"></button>
+                        <button class="color-swatch bg-blue-600" title="Blue 600" @click="applyTextColor(block.id, 'text-blue-600'); showColors = false"></button>
+                        <button class="color-swatch bg-blue-700" title="Blue 700" @click="applyTextColor(block.id, 'text-blue-700'); showColors = false"></button>
+                    </div>
+                    {{-- Indigo --}}
+                    <div class="color-row">
+                        <button class="color-swatch bg-indigo-500" title="Indigo 500" @click="applyTextColor(block.id, 'text-indigo-500'); showColors = false"></button>
+                        <button class="color-swatch bg-indigo-600" title="Indigo 600" @click="applyTextColor(block.id, 'text-indigo-600'); showColors = false"></button>
+                        <button class="color-swatch bg-indigo-700" title="Indigo 700" @click="applyTextColor(block.id, 'text-indigo-700'); showColors = false"></button>
+                    </div>
+                    {{-- Purple --}}
+                    <div class="color-row">
+                        <button class="color-swatch bg-purple-500" title="Purple 500" @click="applyTextColor(block.id, 'text-purple-500'); showColors = false"></button>
+                        <button class="color-swatch bg-purple-600" title="Purple 600" @click="applyTextColor(block.id, 'text-purple-600'); showColors = false"></button>
+                        <button class="color-swatch bg-purple-700" title="Purple 700" @click="applyTextColor(block.id, 'text-purple-700'); showColors = false"></button>
+                    </div>
+                    {{-- Pink --}}
+                    <div class="color-row">
+                        <button class="color-swatch bg-pink-500" title="Pink 500" @click="applyTextColor(block.id, 'text-pink-500'); showColors = false"></button>
+                        <button class="color-swatch bg-pink-600" title="Pink 600" @click="applyTextColor(block.id, 'text-pink-600'); showColors = false"></button>
+                        <button class="color-swatch bg-pink-700" title="Pink 700" @click="applyTextColor(block.id, 'text-pink-700'); showColors = false"></button>
+                    </div>
+                    {{-- Gray (Remover cor) --}}
+                    <div class="color-row">
+                        <button class="color-swatch bg-gray-900" title="Remover cor" @click="applyTextColor(block.id, ''); showColors = false"></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+    
     <div class="block-toolbar-divider"></div>
     <div class="block-toolbar-section">
         <button class="block-toolbar-btn" title="Mais opções" disabled>
