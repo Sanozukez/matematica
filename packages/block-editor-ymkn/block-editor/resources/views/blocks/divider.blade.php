@@ -5,6 +5,9 @@
     :class="{ 'block-focused': focusedBlockId === block.id }"
     @click="focusedBlockId = block.id"
 >
+    {{-- Toolbar Universal --}}
+    @include('block-editor-ymkn::components.block-toolbar')
+    
     <hr class="block-divider" />
     
     <style>

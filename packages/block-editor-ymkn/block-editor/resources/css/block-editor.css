@@ -152,14 +152,16 @@
     margin-left: 280px;
 }
 
-/* Título da Aula (acima do canvas) */
+/* Título da Aula (entre topbar e canvas, sem fundo branco) */
 .lesson-title-wrapper {
-    width: 100%;
     max-width: 800px;
-    background: white;
-    border-radius: 8px 8px 0 0;
-    padding: 40px 80px 0 80px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    margin: 0 auto;
+    padding: 40px 80px 20px 80px;
+    transition: margin-left 0.3s ease;
+}
+
+.lesson-title-wrapper.shifted {
+    margin-left: 140px; /* Metade da sidebar (280px / 2) */
 }
 
 .lesson-title-input {
@@ -170,13 +172,13 @@
     font-weight: 700;
     line-height: 1.2;
     color: #1E1E1E;
+    background: transparent;
     padding: 0;
-    margin-bottom: 20px;
     font-family: inherit;
 }
 
 .lesson-title-input::placeholder {
-    color: #DCDCDE;
+    color: #9CA3AF;
 }
 
 .lesson-title-input:focus {
@@ -188,7 +190,7 @@
     max-width: 800px;
     background: white;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    border-radius: 0 0 8px 8px;
+    border-radius: 8px;
     padding: 20px 80px 60px 80px;
     min-height: calc(100vh - 300px);
 }

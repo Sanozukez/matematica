@@ -4,24 +4,8 @@
     :data-block-id="block.id"
     :class="{ 'block-focused': focusedBlockId === block.id }"
 >
-    {{-- Floating Toolbar (estilo WordPress) --}}
-    <div 
-        class="heading-floating-toolbar" 
-        x-show="focusedBlockId === block.id"
-        x-transition:enter="transition ease-out duration-100"
-        x-transition:enter-start="opacity-0 -translate-y-1"
-        x-transition:enter-end="opacity-100 translate-y-0"
-    >
-        <template x-for="level in [1,2,3,4,5,6]" :key="level">
-            <button 
-                class="heading-level-btn-toolbar"
-                :class="{ 'active': (block.attributes.level || 2) === level }"
-                @click="updateBlockAttributes(block.id, { level: level })"
-                x-text="'H' + level"
-                :title="'Título nível ' + level"
-            ></button>
-        </template>
-    </div>
+    {{-- Toolbar Universal --}}
+    @include('block-editor-ymkn::components.block-toolbar')
     
     <div class="block-content">
         {{-- Heading Editable --}}

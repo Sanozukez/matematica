@@ -55,18 +55,18 @@
 
     {{-- Main Content Area --}}
     <div class="block-editor-main">
+        {{-- Título da Aula (entre topbar e canvas) --}}
+        <div class="lesson-title-wrapper" :class="{ 'shifted': canvasShifted }">
+            <input 
+                type="text" 
+                class="lesson-title-input" 
+                placeholder="Adicionar título"
+                value="{{ $lesson->title ?? '' }}"
+            >
+        </div>
+
         {{-- Editor Canvas --}}
         <div class="block-editor-canvas" :class="{ 'shifted': canvasShifted }">
-            {{-- Título da Aula (como título de post do WordPress) --}}
-            <div class="lesson-title-wrapper">
-                <input 
-                    type="text" 
-                    class="lesson-title-input" 
-                    placeholder="Adicionar título"
-                    value="{{ $lesson->title ?? '' }}"
-                >
-            </div>
-            
             <div class="block-editor-blocks" @click="handleCanvasClick($event)">
                 {{-- Empty State --}}
                 <div 
