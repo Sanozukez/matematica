@@ -13,11 +13,11 @@
             class="block-heading"
             :class="'heading-level-' + (block.attributes.level || 2)"
             contenteditable="true"
-            @input="updateBlockContent(block.id, $event.target.textContent)"
+            @input="updateBlockContent(block.id, $event.target.innerHTML); debouncedSave();"
             @keydown.enter="handleEnter($event, block.id)"
             @keydown.backspace="handleBackspace($event, block.id)"
             @focus="focusedBlockId = block.id"
-            x-init="$el.textContent = block.content"
+            x-init="if (block.content) { $el.innerHTML = block.content; }"
             placeholder="Digite o título..."
         ></div>
     </div>

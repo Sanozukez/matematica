@@ -48,12 +48,6 @@ window.BlockEditorCore = function() {
             // Carrega blocos salvos (se existir)
             this.loadBlocks();
             
-            // Watcher para auto-save (debounced 2 segundos)
-            this.$watch('blocks', () => {
-                this.hasChanges = true;
-                this.debouncedSave();
-            });
-            
             console.log('Block Editor iniciado', { lessonId: this.lessonId });
         },
         
@@ -61,6 +55,7 @@ window.BlockEditorCore = function() {
          * Debounce para auto-save (2 segundos após parar de editar)
          */
         debouncedSave() {
+            this.hasChanges = true;
             clearTimeout(this._saveTimeout);
             this._saveTimeout = setTimeout(() => {
                 if (this.hasChanges) {
