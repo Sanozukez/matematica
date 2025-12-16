@@ -15,14 +15,25 @@
     {{-- Top Toolbar --}}
     <div class="block-editor-toolbar">
         <div class="block-editor-toolbar-left">
-            <span class="block-editor-logo">Editor de Conteúdo</span>
+            {{-- Logo Box (65x65 preto com book-open) --}}
+            <div class="block-editor-logo-box">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
+                </svg>
+            </div>
 
-            {{-- Add Block Button --}}
-            <button class="block-editor-btn block-editor-btn-secondary" @click="openBlockInserter()">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" style="width: 20px; height: 20px;">
+            {{-- Toggle Inserter Button (quadrado azul com + ou -) --}}
+            <button 
+                class="block-editor-add-block-btn" 
+                @click="showBlockInserter = !showBlockInserter; canvasShifted = showBlockInserter"
+                :title="showBlockInserter ? 'Fechar Blocos' : 'Adicionar Bloco'"
+            >
+                <svg x-show="!showBlockInserter" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
                 </svg>
-                Adicionar Bloco
+                <svg x-show="showBlockInserter" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 12h-15" />
+                </svg>
             </button>
         </div>
 

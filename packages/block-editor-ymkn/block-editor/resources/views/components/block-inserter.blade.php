@@ -9,14 +9,14 @@
     x-transition:leave-start="opacity-100 translate-x-0"
     x-transition:leave-end="opacity-0 -translate-x-full"
     class="block-inserter-wp"
-    @keydown.escape.window="closeBlockInserter()"
+    @keydown.escape.window="showBlockInserter = false; canvasShifted = false"
 >
     {{-- Header --}}
     <div class="block-inserter-header-wp">
         <h3 class="block-inserter-title-wp">Adicionar Bloco</h3>
         <button 
             class="block-inserter-close-wp" 
-            @click="closeBlockInserter()"
+            @click="showBlockInserter = false; canvasShifted = false"
             title="Fechar (Esc)"
         >
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" style="width: 16px; height: 16px;">

@@ -64,29 +64,11 @@ window.BlockEditorCore = function() {
         },
         
         /**
-         * Abre sidebar de blocos e empurra canvas
-         */
-        openBlockInserter() {
-            this.showBlockInserter = true;
-            this.canvasShifted = true;
-            this.blockSearchQuery = '';
-            this.filteredBlockTypes = [...this.blockTypes];
-        },
-        
-        /**
-         * Fecha sidebar e retorna canvas
-         */
-        closeBlockInserter() {
-            this.showBlockInserter = false;
-            this.canvasShifted = false;
-        },
-        
-        /**
-         * Insere bloco a partir do modal
+         * Insere bloco a partir do sidebar (NÃO fecha sidebar)
          */
         insertBlockFromModal(type) {
             this.addBlock(type);
-            this.closeBlockInserter();
+            // Sidebar permanece aberta (comportamento WordPress)
         },
         
         /**

@@ -4,6 +4,9 @@
     :data-block-id="block.id"
     :class="{ 'block-focused': focusedBlockId === block.id }"
 >
+    {{-- Toolbar Universal Flutuante --}}
+    @include('block-editor-ymkn::components.block-toolbar')
+    
     <div class="block-content">
         <div 
             class="block-paragraph"
