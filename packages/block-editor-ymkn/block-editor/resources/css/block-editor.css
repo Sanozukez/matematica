@@ -152,14 +152,45 @@
     margin-left: 280px;
 }
 
+/* Título da Aula (acima do canvas) */
+.lesson-title-wrapper {
+    width: 100%;
+    max-width: 800px;
+    background: white;
+    border-radius: 8px 8px 0 0;
+    padding: 40px 80px 0 80px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.lesson-title-input {
+    width: 100%;
+    border: none;
+    outline: none;
+    font-size: 2.5rem;
+    font-weight: 700;
+    line-height: 1.2;
+    color: #1E1E1E;
+    padding: 0;
+    margin-bottom: 20px;
+    font-family: inherit;
+}
+
+.lesson-title-input::placeholder {
+    color: #DCDCDE;
+}
+
+.lesson-title-input:focus {
+    outline: none;
+}
+
 .block-editor-blocks {
     width: 100%;
     max-width: 800px;
     background: white;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
-    padding: 60px 80px;
-    min-height: calc(100vh - 200px);
+    border-radius: 0 0 8px 8px;
+    padding: 20px 80px 60px 80px;
+    min-height: calc(100vh - 300px);
 }
 
 /* Right Sidebar (info da aula) */
@@ -474,40 +505,191 @@
 }
 
 /* =============================================================================
-   4. FLOATING TOOLBAR (Headings)
+   4. UNIVERSAL TOOLBAR (Material Icons - WordPress Style)
    ============================================================================= */
 
-.heading-floating-toolbar {
+.block-toolbar-universal {
     position: absolute;
-    top: -48px;
+    top: -54px;
     left: 0;
+    right: 0;
+    z-index: 100;
     background: #1E1E1E;
-    border-radius: 6px;
-    padding: 6px;
+    border: 1px solid #3C3C3C;
+    border-radius: 8px;
+    padding: 6px 8px;
     display: flex;
-    gap: 4px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-    z-index: 10;
+    align-items: center;
+    gap: 2px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
 
-.heading-level-btn {
-    padding: 6px 12px;
+/* Seção da toolbar */
+.block-toolbar-section {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+}
+
+/* Botões padrão */
+.block-toolbar-btn {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     background: transparent;
-    color: white;
     border: none;
     border-radius: 4px;
+    color: #E0E0E0;
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+    position: relative;
+    padding: 0;
+}
+
+.block-toolbar-btn:hover:not(:disabled) {
+    background: #2D2D2D;
+}
+
+.block-toolbar-btn:active:not(:disabled) {
+    background: #3C3C3C;
+}
+
+.block-toolbar-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+/* Material Icons sizing */
+.block-toolbar-btn .material-icons {
+    font-size: 20px;
+}
+
+/* Ícone do tipo do bloco (Heroicons ainda) */
+.block-toolbar-icon svg {
+    width: 20px;
+    height: 20px;
+    color: #E0E0E0;
+}
+
+/* Botão de nível de heading (H2, H3, etc) */
+.block-toolbar-heading-level {
+    width: auto;
+    padding: 0 8px;
+    gap: 4px;
     font-size: 13px;
     font-weight: 600;
+    color: #E0E0E0;
+}
+
+/* Chevrons empilhados verticalmente */
+.block-toolbar-move-vertical {
+    display: flex;
+    flex-direction: column;
+    width: 36px;
+    height: 36px;
+    gap: 0;
+}
+
+.block-toolbar-btn-mini {
+    width: 36px;
+    height: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: none;
+    color: #E0E0E0;
     cursor: pointer;
-    transition: background 0.2s;
+    transition: background-color 0.15s ease;
+    position: relative;
 }
 
-.heading-level-btn:hover {
-    background: rgba(255, 255, 255, 0.1);
+.block-toolbar-btn-mini:hover:not(:disabled) {
+    background: #2D2D2D;
 }
 
-.heading-level-btn.active {
-    background: #007CBA;
+.block-toolbar-btn-mini:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.block-toolbar-btn-mini .material-icons {
+    font-size: 16px;
+}
+
+.block-toolbar-btn-mini:first-child {
+    border-radius: 4px 4px 0 0;
+}
+
+.block-toolbar-btn-mini:last-child {
+    border-radius: 0 0 4px 4px;
+}
+
+/* Divider vertical */
+.block-toolbar-divider {
+    width: 1px;
+    height: 24px;
+    background: #3C3C3C;
+    margin: 0 4px;
+}
+
+/* Tooltips com delay de 2 segundos */
+.block-toolbar-btn[title]::after,
+.block-toolbar-btn-mini[title]::after {
+    content: attr(title);
+    position: absolute;
+    bottom: -34px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #1E1E1E;
+    color: #E0E0E0;
+    padding: 6px 10px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 400;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+    transition-delay: 0s;
+    border: 1px solid #3C3C3C;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    z-index: 101;
+}
+
+.block-toolbar-btn:hover[title]::after,
+.block-toolbar-btn-mini:hover[title]::after {
+    transition-delay: 2s;
+    opacity: 1;
+}
+
+/* Seta do tooltip */
+.block-toolbar-btn[title]::before,
+.block-toolbar-btn-mini[title]::before {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-bottom: 6px solid #1E1E1E;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+    transition-delay: 0s;
+    z-index: 101;
+}
+
+.block-toolbar-btn:hover[title]::before,
+.block-toolbar-btn-mini:hover[title]::before {
+    transition-delay: 2s;
+    opacity: 1;
 }
 
 /* =============================================================================
