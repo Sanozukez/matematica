@@ -12,72 +12,72 @@
             showBlockInserter: false,
             blockSearchQuery: '',
             
-            // Tipos de blocos disponíveis
+            // Tipos de blocos disponíveis (com Heroicons)
             blockTypes: [
                 { 
                     type: 'paragraph', 
                     label: 'Parágrafo', 
-                    icon: '📝',
+                    icon: '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" /></svg>',
                     description: 'Texto simples com formatação'
                 },
                 { 
                     type: 'heading', 
                     label: 'Título', 
-                    icon: '🔤',
+                    icon: '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 5.25h16.5m-16.5 4.5h16.5m-16.5 4.5h16.5m-16.5 4.5h16.5" /></svg>',
                     description: 'Títulos H1 a H6'
                 },
                 { 
                     type: 'image', 
                     label: 'Imagem', 
-                    icon: '🖼️',
+                    icon: '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5H3.75A1.5 1.5 0 0 0 2.25 6v12a1.5 1.5 0 0 0 1.5 1.5Zm10.5-11.25h.008v.008h-.008V8.25Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" /></svg>',
                     description: 'Upload ou URL de imagem'
                 },
                 { 
                     type: 'video', 
                     label: 'Vídeo', 
-                    icon: '🎥',
+                    icon: '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m15.75 10.5 4.72-4.72a.75.75 0 0 1 1.28.53v11.38a.75.75 0 0 1-1.28.53l-4.72-4.72M4.5 18.75h9a2.25 2.25 0 0 0 2.25-2.25v-9a2.25 2.25 0 0 0-2.25-2.25h-9A2.25 2.25 0 0 0 2.25 7.5v9a2.25 2.25 0 0 0 2.25 2.25Z" /></svg>',
                     description: 'YouTube, Vimeo ou arquivo'
                 },
                 { 
                     type: 'code', 
                     label: 'Código', 
-                    icon: '💻',
+                    icon: '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M17.25 6.75 22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3-4.5 16.5" /></svg>',
                     description: 'Bloco de código com syntax highlight'
                 },
                 { 
                     type: 'quote', 
                     label: 'Citação', 
-                    icon: '💬',
+                    icon: '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M7.5 8.25h9m-9 3H12m-9.75 1.51c0 1.6 1.123 2.994 2.707 3.227 1.129.166 2.27.293 3.423.379.35.026.67.21.865.501L12 21l2.755-4.133a1.14 1.14 0 0 1 .865-.501 48.172 48.172 0 0 0 3.423-.379c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0 0 12 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018Z" /></svg>',
                     description: 'Bloco de citação destacada'
                 },
                 { 
                     type: 'alert', 
                     label: 'Alerta', 
-                    icon: '⚠️',
+                    icon: '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z" /></svg>',
                     description: 'Aviso, info, sucesso ou erro'
                 },
                 { 
                     type: 'list', 
                     label: 'Lista', 
-                    icon: '📋',
+                    icon: '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 6.75h12M8.25 12h12m-12 5.25h12M3.75 6.75h.007v.008H3.75V6.75Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0ZM3.75 12h.007v.008H3.75V12Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm-.375 5.25h.007v.008H3.75v-.008Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" /></svg>',
                     description: 'Lista ordenada ou não ordenada'
                 },
                 { 
                     type: 'latex', 
                     label: 'Fórmula LaTeX', 
-                    icon: '∑',
+                    icon: '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 15.75V18m-7.5-6.75h.008v.008H8.25v-.008Zm0 2.25h.008v.008H8.25V13.5Zm0 2.25h.008v.008H8.25v-.008Zm0 2.25h.008v.008H8.25V18Zm2.498-6.75h.007v.008h-.007v-.008Zm0 2.25h.007v.008h-.007V13.5Zm0 2.25h.007v.008h-.007v-.008Zm0 2.25h.007v.008h-.007V18Zm2.504-6.75h.008v.008h-.008v-.008Zm0 2.25h.008v.008h-.008V13.5ZM8.25 6h7.5v2.25h-7.5V6ZM12 2.25c-1.892 0-3.758.11-5.593.322C5.307 2.7 4.5 3.65 4.5 4.757V19.5a2.25 2.25 0 0 0 2.25 2.25h10.5a2.25 2.25 0 0 0 2.25-2.25V4.757c0-1.108-.806-2.057-1.907-2.185A48.507 48.507 0 0 0 12 2.25Z" /></svg>',
                     description: 'Equações matemáticas'
                 },
                 { 
                     type: 'divider', 
                     label: 'Divisor', 
-                    icon: '➖',
+                    icon: '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14" /></svg>',
                     description: 'Linha separadora horizontal'
                 },
                 { 
                     type: 'table', 
                     label: 'Tabela', 
-                    icon: '📊',
+                    icon: '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.375 19.5h17.25m-17.25 0a1.125 1.125 0 0 1-1.125-1.125M3.375 19.5h7.5c.621 0 1.125-.504 1.125-1.125m-9.75 0V5.625m0 12.75v-1.5c0-.621.504-1.125 1.125-1.125m18.375 2.625V5.625m0 12.75c0 .621-.504 1.125-1.125 1.125m1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125m0 3.75h-7.5A1.125 1.125 0 0 1 12 18.375m9.75-12.75c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125m19.5 0v1.5c0 .621-.504 1.125-1.125 1.125M2.25 5.625v1.5c0 .621.504 1.125 1.125 1.125m0 0h17.25m-17.25 0h7.5c.621 0 1.125.504 1.125 1.125M3.375 8.25c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125m17.25-3.75h-7.5c-.621 0-1.125.504-1.125 1.125m8.625-1.125c.621 0 1.125.504 1.125 1.125v1.5c0 .621-.504 1.125-1.125 1.125m-17.25 0h7.5m-7.5 0c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125M12 10.875v-1.5m0 1.5c0 .621-.504 1.125-1.125 1.125M12 10.875c0 .621.504 1.125 1.125 1.125m-2.25 0c.621 0 1.125.504 1.125 1.125M13.125 12h7.5m-7.5 0c-.621 0-1.125.504-1.125 1.125M20.625 12c.621 0 1.125.504 1.125 1.125v1.5c0 .621-.504 1.125-1.125 1.125m-17.25 0h7.5M12 14.625v-1.5m0 1.5c0 .621-.504 1.125-1.125 1.125M12 14.625c0 .621.504 1.125 1.125 1.125m-2.25 0c.621 0 1.125.504 1.125 1.125m0 1.5v-1.5m0 0c0-.621.504-1.125 1.125-1.125m0 0h7.5" /></svg>',
                     description: 'Tabela de dados'
                 }
             ],
@@ -161,13 +161,11 @@
                     id: this.generateBlockId(),
                     type: type,
                     content: '',
-                    order: this.blocks.length,
                     attributes: {}
                 };
                 
                 if (afterIndex !== null) {
                     this.blocks.splice(afterIndex + 1, 0, newBlock);
-                    this.reorderBlocks();
                 } else {
                     this.blocks.push(newBlock);
                 }
@@ -196,7 +194,6 @@
                 
                 // Remove o bloco
                 this.blocks.splice(index, 1);
-                this.reorderBlocks();
                 
                 // Foca no bloco anterior ou próximo
                 const newFocusIndex = index > 0 ? index - 1 : 0;
@@ -274,15 +271,6 @@
             },
             
             /**
-             * Reordena blocos
-             */
-            reorderBlocks() {
-                this.blocks.forEach((block, index) => {
-                    block.order = index;
-                });
-            },
-            
-            /**
              * Gera ID único para bloco
              */
             generateBlockId() {
@@ -290,16 +278,15 @@
             },
             
             /**
-             * Serializa blocos para JSON
+             * Serializa blocos para JSON (estrutura simplificada)
+             * Ordem é implícita pelo índice do array
              */
             toJSON() {
                 return {
-                    lesson_id: this.lessonId,
                     blocks: this.blocks.map(block => ({
                         id: block.id,
                         type: block.type,
                         content: block.content,
-                        order: block.order,
                         attributes: block.attributes
                     }))
                 };
@@ -344,6 +331,24 @@
              */
             startWriting() {
                 if (this.blocks.length === 0) {
+                    this.addBlock('paragraph');
+                }
+            },
+            
+            /**
+             * Adiciona parágrafo ao clicar no canvas vazio (estilo WordPress)
+             * Quando clica abaixo do último bloco, cria novo parágrafo
+             */
+            handleCanvasClick(event) {
+                // Verifica se clicou diretamente no container (não em um bloco)
+                if (event.target.classList.contains('block-editor-blocks')) {
+                    // Se não há blocos, cria o primeiro
+                    if (this.blocks.length === 0) {
+                        this.startWriting();
+                        return;
+                    }
+                    
+                    // Se já há blocos, adiciona parágrafo no final
                     this.addBlock('paragraph');
                 }
             }
@@ -575,7 +580,7 @@
         {{-- Editor Canvas --}}
         <div class="block-editor-canvas">
             <div class="block-editor-canvas-inner">
-                <div class="block-editor-blocks">
+                <div class="block-editor-blocks" @click="handleCanvasClick($event)">
                     {{-- Empty State --}}
                     <div 
                         class="block-editor-empty-state" 

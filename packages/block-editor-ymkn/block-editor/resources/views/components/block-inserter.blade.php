@@ -1,12 +1,17 @@
-{{-- Block Inserter Modal (Popup de Seleção de Blocos) --}}
+{{-- Block Inserter Sidebar (Estilo WordPress) --}}
 <div 
     x-show="showBlockInserter" 
     x-cloak
-    class="block-inserter-overlay"
-    @click.self="showBlockInserter = false"
+    x-transition:enter="transition ease-out duration-200"
+    x-transition:enter-start="-translate-x-full"
+    x-transition:enter-end="translate-x-0"
+    x-transition:leave="transition ease-in duration-150"
+    x-transition:leave-start="translate-x-0"
+    x-transition:leave-end="-translate-x-full"
+    class="block-inserter-sidebar"
     @keydown.escape.window="showBlockInserter = false"
 >
-    <div class="block-inserter-modal">
+    <div class="block-inserter-inner">
         {{-- Header --}}
         <div class="block-inserter-header">
             <h3 class="block-inserter-title">Adicionar Bloco</h3>
@@ -23,25 +28,27 @@
         
         {{-- Search Bar --}}
         <div class="block-inserter-search">
+            <svg class="block-inserter-search-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+            </svg>
             <input 
                 type="text" 
-                placeholder="Buscar blocos..."
+                placeholder="Buscar..."
                 x-model="blockSearchQuery"
                 class="block-inserter-search-input"
                 @input="filterBlocks()"
             >
         </div>
         
-        {{-- Block Grid --}}
-        <div class="block-inserter-grid">
+        {{-- Block List (estilo WordPress) --}}
+        <div class="block-inserter-list">
             <template x-for="blockType in filteredBlockTypes" :key="blockType.type">
                 <button 
-                    class="block-inserter-item"
+                    class="block-inserter-item-wp"
                     @click="insertBlockFromModal(blockType.type)"
                 >
-                    <div class="block-inserter-item-icon" x-html="blockType.icon"></div>
-                    <div class="block-inserter-item-label" x-text="blockType.label"></div>
-                    <div class="block-inserter-item-description" x-text="blockType.description"></div>
+                    <div class="block-inserter-item-icon-wp" x-html="blockType.icon"></div>
+                    <span class="block-inserter-item-label-wp" x-text="blockType.label"></span>
                 </button>
             </template>
         </div>
@@ -50,66 +57,45 @@
     <style>
         [x-cloak] { display: none !important; }
         
-        .block-inserter-overlay {
+        .block-inserter-sidebar {
             position: fixed;
-            top: 0;
+            top: 65px; /* Abaixo da navbar */
             left: 0;
-            right: 0;
             bottom: 0;
-            background: rgba(0, 0, 0, 0.5);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 9999;
-            animation: fadeIn 0.2s ease;
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-        
-        .block-inserter-modal {
+            width: 280px;
             background: #FFFFFF;
-            border-radius: 8px;
-            width: 90%;
-            max-width: 640px;
-            max-height: 80vh;
+            border-right: 1px solid #DCDCDE;
+            z-index: 999;
+            box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
             display: flex;
             flex-direction: column;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-            animation: slideUp 0.3s ease;
         }
         
-        @keyframes slideUp {
-            from { 
-                opacity: 0;
-                transform: translateY(20px); 
-            }
-            to { 
-                opacity: 1;
-                transform: translateY(0); 
-            }
+        .block-inserter-inner {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
         }
         
         .block-inserter-header {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 1.5rem;
+            padding: 1rem 1.25rem;
             border-bottom: 1px solid #DCDCDE;
+            flex-shrink: 0;
         }
         
         .block-inserter-title {
-            font-size: 1.25rem;
+            font-size: 0.9375rem;
             font-weight: 600;
             color: #1E1E1E;
             margin: 0;
         }
         
         .block-inserter-close {
-            width: 32px;
-            height: 32px;
+            width: 28px;
+            height: 28px;
             border: none;
             background: transparent;
             cursor: pointer;
@@ -117,7 +103,7 @@
             align-items: center;
             justify-content: center;
             border-radius: 4px;
-            transition: background-color 0.2s;
+            transition: background-color 0.15s;
         }
         
         .block-inserter-close:hover {
@@ -125,74 +111,90 @@
         }
         
         .block-inserter-close svg {
-            width: 20px;
-            height: 20px;
-            color: #1E1E1E;
+            width: 18px;
+            height: 18px;
+            color: #6B7280;
         }
         
         .block-inserter-search {
-            padding: 1rem 1.5rem;
+            position: relative;
+            padding: 0.75rem 1.25rem;
             border-bottom: 1px solid #DCDCDE;
+            flex-shrink: 0;
+        }
+        
+        .block-inserter-search-icon {
+            position: absolute;
+            left: 1.75rem;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 16px;
+            height: 16px;
+            color: #9CA3AF;
+            pointer-events: none;
         }
         
         .block-inserter-search-input {
             width: 100%;
-            padding: 0.75rem;
+            padding: 0.5rem 0.75rem 0.5rem 2rem;
             border: 1px solid #DCDCDE;
             border-radius: 4px;
-            font-size: 0.875rem;
+            font-size: 0.8125rem;
             outline: none;
-            transition: border-color 0.2s;
+            transition: border-color 0.15s;
         }
         
         .block-inserter-search-input:focus {
             border-color: #007CBA;
         }
         
-        .block-inserter-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-            gap: 0.5rem;
-            padding: 1.5rem;
+        .block-inserter-list {
+            flex: 1;
             overflow-y: auto;
-            max-height: 400px;
+            padding: 0.5rem;
         }
         
-        .block-inserter-item {
-            background: #FFFFFF;
-            border: 1px solid #DCDCDE;
-            border-radius: 4px;
-            padding: 1rem;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.2s;
+        /* Item estilo WordPress: ícone à esquerda, texto à direita */
+        .block-inserter-item-wp {
+            width: 100%;
             display: flex;
-            flex-direction: column;
             align-items: center;
-            gap: 0.5rem;
+            gap: 0.75rem;
+            padding: 0.625rem 0.75rem;
+            background: transparent;
+            border: 1px solid transparent;
+            border-radius: 4px;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.15s;
+            margin-bottom: 0.25rem;
         }
         
-        .block-inserter-item:hover {
+        .block-inserter-item-wp:hover {
             background: #F0F0F0;
-            border-color: #007CBA;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-color: #DCDCDE;
         }
         
-        .block-inserter-item-icon {
-            font-size: 2rem;
-        }
-        
-        .block-inserter-item-label {
-            font-size: 0.875rem;
-            font-weight: 500;
+        .block-inserter-item-icon-wp {
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
             color: #1E1E1E;
         }
         
-        .block-inserter-item-description {
-            font-size: 0.75rem;
-            color: #757575;
-            line-height: 1.4;
+        .block-inserter-item-icon-wp svg {
+            width: 20px;
+            height: 20px;
+        }
+        
+        .block-inserter-item-label-wp {
+            font-size: 0.8125rem;
+            font-weight: 400;
+            color: #1E1E1E;
+            flex: 1;
         }
     </style>
 </div>

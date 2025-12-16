@@ -31,7 +31,6 @@ class LessonBlockController extends Controller
         // TODO: Adicionar autorização quando implementar policies
         
         return response()->json([
-            'lesson_id' => $lesson->id,
             'blocks' => $lesson->content['blocks'] ?? []
         ]);
     }
@@ -43,14 +42,12 @@ class LessonBlockController extends Controller
      */
     public function store(Request $request, Lesson $lesson): JsonResponse
     {
-        // Validação
+        // Validação simplificada (order não é mais necessário)
         $validator = Validator::make($request->all(), [
-            'lesson_id' => 'required|uuid',
             'blocks' => 'required|array',
             'blocks.*.id' => 'required|string',
             'blocks.*.type' => 'required|string|in:paragraph,heading,image,video,code,quote,alert,list,latex,divider,table',
             'blocks.*.content' => 'nullable|string',
-            'blocks.*.order' => 'required|integer|min:0',
             'blocks.*.attributes' => 'nullable|array',
         ]);
         
@@ -61,16 +58,9 @@ class LessonBlockController extends Controller
             ], 422);
         }
         
-        // Verifica se lesson_id corresponde
-        if ($request->input('lesson_id') !== $lesson->id) {
-            return response()->json([
-                'message' => 'ID da lição não corresponde'
-            ], 400);
-        }
-        
         // TODO: Adicionar autorização quando implementar policies
         
-        // Salva blocos no content (JSON)
+        // Salva blocos no content (JSON) - sem lesson_id redundante
         $lesson->content = [
             'blocks' => $request->input('blocks'),
             'updated_at' => now()->toISOString()
@@ -79,7 +69,6 @@ class LessonBlockController extends Controller
         
         return response()->json([
             'message' => 'Blocos salvos com sucesso',
-            'lesson_id' => $lesson->id,
             'blocks_count' => count($request->input('blocks'))
         ]);
     }

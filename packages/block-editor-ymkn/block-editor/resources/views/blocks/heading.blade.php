@@ -4,19 +4,26 @@
     :data-block-id="block.id"
     :class="{ 'block-focused': focusedBlockId === block.id }"
 >
+    {{-- Floating Toolbar (estilo WordPress) --}}
+    <div 
+        class="heading-floating-toolbar" 
+        x-show="focusedBlockId === block.id"
+        x-transition:enter="transition ease-out duration-100"
+        x-transition:enter-start="opacity-0 -translate-y-1"
+        x-transition:enter-end="opacity-100 translate-y-0"
+    >
+        <template x-for="level in [1,2,3,4,5,6]" :key="level">
+            <button 
+                class="heading-level-btn-toolbar"
+                :class="{ 'active': (block.attributes.level || 2) === level }"
+                @click="updateBlockAttributes(block.id, { level: level })"
+                x-text="'H' + level"
+                :title="'Título nível ' + level"
+            ></button>
+        </template>
+    </div>
+    
     <div class="block-content">
-        {{-- Level Selector --}}
-        <div class="heading-level-selector" x-show="focusedBlockId === block.id">
-            <template x-for="level in [1,2,3,4,5,6]" :key="level">
-                <button 
-                    class="heading-level-btn"
-                    :class="{ 'active': (block.attributes.level || 2) === level }"
-                    @click="updateBlockAttributes(block.id, { level: level })"
-                    x-text="'H' + level"
-                ></button>
-            </template>
-        </div>
-        
         {{-- Heading Editable --}}
         <div 
             class="block-heading"
@@ -32,34 +39,40 @@
     </div>
     
     <style>
-        .heading-level-selector {
+        /* Floating Toolbar - estilo WordPress */
+        .heading-floating-toolbar {
+            position: absolute;
+            top: -48px;
+            left: 0;
             display: flex;
-            gap: 0.25rem;
-            margin-bottom: 0.5rem;
-            padding: 0.5rem;
-            background: #F9FAFB;
+            gap: 2px;
+            background: #1E1E1E;
             border-radius: 4px;
+            padding: 4px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            z-index: 10;
         }
         
-        .heading-level-btn {
-            padding: 0.25rem 0.75rem;
-            background: #FFFFFF;
-            border: 1px solid #DCDCDE;
+        .heading-level-btn-toolbar {
+            padding: 6px 10px;
+            background: transparent;
+            border: none;
             border-radius: 3px;
             font-size: 0.75rem;
             font-weight: 600;
+            color: #FFFFFF;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: background-color 0.15s;
+            min-width: 32px;
         }
         
-        .heading-level-btn:hover {
-            background: #F0F0F0;
+        .heading-level-btn-toolbar:hover {
+            background: rgba(255, 255, 255, 0.1);
         }
         
-        .heading-level-btn.active {
+        .heading-level-btn-toolbar.active {
             background: #007CBA;
             color: #FFFFFF;
-            border-color: #007CBA;
         }
         
         .block-heading {
