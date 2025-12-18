@@ -25,6 +25,7 @@
         <link rel="stylesheet" href="{{ asset('vendor/block-editor/css/menus.css') }}">
         <link rel="stylesheet" href="{{ asset('vendor/block-editor/css/sidebar-left.css') }}">
         <link rel="stylesheet" href="{{ asset('vendor/block-editor/css/sidebar-right.css') }}">
+        <link rel="stylesheet" href="{{ asset('vendor/block-editor/css/sidebar-enhanced.css') }}">
         <link rel="stylesheet" href="{{ asset('vendor/block-editor/css/block-inserter-between.css') }}">
         <link rel="stylesheet" href="{{ asset('vendor/block-editor/css/blocks.css') }}">
         <link rel="stylesheet" href="{{ asset('vendor/block-editor/css/states.css') }}">

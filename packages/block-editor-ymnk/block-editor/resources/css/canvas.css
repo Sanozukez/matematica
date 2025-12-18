@@ -9,7 +9,7 @@
     flex-direction: column;
     overflow: hidden;
     height: calc(100vh - 65px - var(--topbar-height, 64px));
-    margin-top: calc(65px + var(--topbar-height, 64px));
+    margin-top: 64px;
 }
 
 /* Scrollable content area */

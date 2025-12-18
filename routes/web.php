@@ -45,6 +45,13 @@ Route::get('/skill-tree', function () {
 })->name('skill-tree.index');
 
 /**
+ * LaTeX Guide
+ */
+Route::get('/latex-guide', function () {
+    return view('helpers.latex-guide');
+})->name('latex-guide');
+
+/**
  * Permalink público para lições (preview)
  * Opcional: pode ser ajustado depois para controller dedicado
  */

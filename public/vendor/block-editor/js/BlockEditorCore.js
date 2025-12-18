@@ -452,6 +452,9 @@ window.BlockEditorCore = function() {
             if (result.success) {
                 this.hasChanges = false;
                 this.showToast('Salvo com sucesso!', 'success');
+                
+                // Recarrega dados do banco para atualizar timestamps e stats
+                await this.loadBlocks();
             } else {
                 this.showToast('Erro ao salvar', 'error');
             }

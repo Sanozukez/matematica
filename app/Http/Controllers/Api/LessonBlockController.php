@@ -30,16 +30,48 @@ class LessonBlockController extends Controller
         // Verifica se o usuário tem permissão de visualizar
         // TODO: Adicionar autorização quando implementar policies
         
+        $blocksCount = count($lesson->content['blocks'] ?? []);
+        $wordsCount = $this->countWords($lesson->content['blocks'] ?? []);
+        
         return response()->json([
             'blocks' => $lesson->content['blocks'] ?? [],
             'lesson_title' => $lesson->title,
             'lesson' => [
                 'id' => $lesson->id,
                 'title' => $lesson->title,
+                'type' => $lesson->type,
                 'is_active' => $lesson->is_active,
-                'updated_at' => $lesson->updated_at?->format('d/m/Y H:i')
+                'duration_minutes' => $lesson->duration_minutes ?? 0,
+                'created_at' => $lesson->created_at?->format('d/m/Y H:i'),
+                'updated_at' => $lesson->updated_at?->format('d/m/Y H:i'),
+                'stats' => [
+                    'blocks_count' => $blocksCount,
+                    'words_count' => $wordsCount,
+                ]
             ]
         ]);
+    }
+    
+    /**
+     * Conta o número de palavras em todos os blocos
+     */
+    private function countWords(array $blocks): int
+    {
+        $count = 0;
+        
+        foreach ($blocks as $block) {
+            if ($block['type'] === 'columns' && isset($block['attributes']['columns'])) {
+                foreach ($block['attributes']['columns'] as $col) {
+                    foreach ($col['blocks'] ?? [] as $innerBlock) {
+                        $count += str_word_count(strip_tags($innerBlock['content'] ?? ''));
+                    }
+                }
+            } else {
+                $count += str_word_count(strip_tags($block['content'] ?? ''));
+            }
+        }
+        
+        return $count;
     }
     
     /**
@@ -53,9 +85,11 @@ class LessonBlockController extends Controller
         $validator = Validator::make($request->all(), [
             'blocks' => 'required|array',
             'blocks.*.id' => 'required|string',
-            'blocks.*.type' => 'required|string|in:paragraph,heading,image,video,code,quote,alert,list,latex,divider,table',
+            'blocks.*.type' => 'required|string|in:paragraph,heading,image,video,code,quote,alert,list,latex,divider,table,columns',
             'blocks.*.content' => 'nullable|string',
             'blocks.*.attributes' => 'nullable|array',
+            'blocks.*.attributes.columns' => 'nullable|array',
+            'blocks.*.attributes.columns.*.blocks' => 'nullable|array',
             'lesson_title' => 'nullable|string|max:255',
         ]);
         

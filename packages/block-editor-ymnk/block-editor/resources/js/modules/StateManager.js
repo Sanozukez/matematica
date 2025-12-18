@@ -64,15 +64,21 @@ window.StateManager = {
                     attributes: block.attributes || {}
                 };
                 
-                // Se for coluna, incluir os blocos internos
+                // Se for coluna, incluir os blocos internos com conteúdo serializado
                 if (block.type === 'columns' && block.attributes?.columns) {
                     serializedBlock.attributes.columns = block.attributes.columns.map(col => ({
-                        blocks: (col.blocks || []).map(innerBlock => ({
-                            id: innerBlock.id,
-                            type: innerBlock.type,
-                            content: innerBlock.content || '',
-                            attributes: innerBlock.attributes || {}
-                        }))
+                        blocks: (col.blocks || []).map(innerBlock => {
+                            // Busca elemento do bloco interno
+                            const innerElement = document.querySelector(`[data-inner-block-id="${innerBlock.id}"]`);
+                            const innerEditable = innerElement?.querySelector('[contenteditable="true"]');
+                            
+                            return {
+                                id: innerBlock.id,
+                                type: innerBlock.type,
+                                content: innerEditable ? innerEditable.innerHTML : (innerBlock.content || ''),
+                                attributes: innerBlock.attributes || {}
+                            };
+                        })
                     }));
                 }
                 

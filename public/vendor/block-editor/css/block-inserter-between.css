@@ -11,15 +11,24 @@
     align-items: center;
     justify-content: center;
     opacity: 0;
-    pointer-events: auto; /* hover limitado à faixa do inserter */
+    pointer-events: none;
     transition: opacity 0.15s ease;
     z-index: 100;
     margin: 0;
 }
 
+/* Exibe quando o bloco anterior está em hover/focus ou o próprio inserter recebe hover */
+.block-editor-block:hover + .block-inserter-between,
+.block-editor-block:focus-within + .block-inserter-between,
+.block-inserter-between:hover {
+    opacity: 1;
+    pointer-events: auto;
+}
+
 /* Hover apenas na faixa do inserter (sem acionar a partir do bloco) */
 .block-inserter-between:hover {
     opacity: 1;
+    pointer-events: auto;
 }
 
 .block-inserter-between:hover .block-inserter-between-line {
@@ -28,7 +37,20 @@
     transform: scaleX(1);
 }
 
+.block-editor-block:hover + .block-inserter-between .block-inserter-between-line,
+.block-editor-block:focus-within + .block-inserter-between .block-inserter-between-line {
+    opacity: 1;
+    background: #007CBA;
+    transform: scaleX(1);
+}
+
 .block-inserter-between:hover .block-inserter-between-btn {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.block-editor-block:hover + .block-inserter-between .block-inserter-between-btn,
+.block-editor-block:focus-within + .block-inserter-between .block-inserter-between-btn {
     opacity: 1;
     transform: scale(1);
 }

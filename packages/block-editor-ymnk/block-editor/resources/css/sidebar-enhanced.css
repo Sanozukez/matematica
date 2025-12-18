@@ -1,0 +1,111 @@
+/**
+ * Enhanced Sidebar Styles - Document Info & Metadata
+ */
+
+/* Enhanced sidebar styles for real-time metadata display */
+.sidebar-label {
+    display: inline-block;
+    font-weight: 600;
+    color: #6B7280;
+    min-width: 70px;
+    font-size: 0.8rem;
+}
+
+.sidebar-active {
+    color: #10B981;
+    font-weight: 600;
+}
+
+.sidebar-inactive {
+    color: #EF4444;
+    font-weight: 600;
+}
+
+.sidebar-type-badge {
+    background: #E0E7FF;
+    color: #4F46E5;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: capitalize;
+    display: inline-block;
+}
+
+.sidebar-date {
+    font-family: 'Courier New', monospace;
+    font-size: 0.8rem;
+    color: #6B7280;
+}
+
+.sidebar-shortcut-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.sidebar-shortcut-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 0;
+    font-size: 0.875rem;
+}
+
+.sidebar-key {
+    background: #F3F4F6;
+    border: 1px solid #D1D5DB;
+    padding: 3px 6px;
+    border-radius: 3px;
+    font-family: 'Courier New', monospace;
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: #1F2937;
+    min-width: 50px;
+    text-align: center;
+    flex-shrink: 0;
+}
+
+.sidebar-key-desc {
+    font-size: 0.8rem;
+    color: #6B7280;
+}
+
+/* Section enhancements */
+.sidebar-section {
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid #E5E7EB;
+}
+
+.sidebar-section:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+.sidebar-section-title {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #374151;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.sidebar-info-item {
+    font-size: 0.875rem;
+    color: #4B5563;
+    padding: 6px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+}
+
+.sidebar-info-item:last-child {
+    border-bottom: none;
+}
