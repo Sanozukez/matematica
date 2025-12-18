@@ -38,6 +38,7 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('admin')
             ->login()
+            ->authGuard('web')
             ->brandName('Matemática Admin')
             ->brandLogo(null) // Pode adicionar logo depois
             ->favicon(null)

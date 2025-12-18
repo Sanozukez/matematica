@@ -1,0 +1,24 @@
+﻿
+/* =============================================================================
+   6. PROTEÃ‡ÃƒO DA NAVBAR FILAMENT - NÃƒO MEXER
+   ============================================================================= */
+
+/* Protege navbar do CSS reset do Lafily */
+.platform-navbar,
+.platform-navbar * {
+    all: revert;
+}
+
+.platform-navbar {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    height: 64px !important;
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+.platform-navbar-wrapper {
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;

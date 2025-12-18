@@ -1,0 +1,143 @@
+/**
+ * BLOCK INSERTER BETWEEN - Botão + entre blocos (estilo WordPress)
+ */
+
+/* Container do inserter (aparece no hover) */
+.block-inserter-between {
+    position: relative;
+    width: 100%;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: auto; /* hover limitado à faixa do inserter */
+    transition: opacity 0.15s ease;
+    z-index: 100;
+    margin: 0;
+}
+
+/* Hover apenas na faixa do inserter (sem acionar a partir do bloco) */
+.block-inserter-between:hover {
+    opacity: 1;
+}
+
+.block-inserter-between:hover .block-inserter-between-line {
+    opacity: 1;
+    background: #007CBA;
+    transform: scaleX(1);
+}
+
+.block-inserter-between:hover .block-inserter-between-btn {
+    opacity: 1;
+    transform: scale(1);
+}
+
+/* Linha horizontal */
+.block-inserter-between-line {
+    position: absolute;
+    left: 0;
+    right: 0;
+    width: 100%;
+    height: 1px;
+    background: #E2E8F0;
+    opacity: 0;
+    transform: scaleX(0);
+    transform-origin: center;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+/* Botão + */
+.block-inserter-between-btn {
+    position: relative;
+    width: 28px;
+    height: 28px;
+    background: #007CBA;
+    border: none;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    opacity: 0;
+    transform: scale(0.6);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    z-index: 26;
+    box-shadow: 0 2px 8px rgba(0, 124, 186, 0.3);
+}
+
+.block-inserter-between-btn:hover {
+    background: #005A87;
+    transform: scale(1.08);
+}
+
+.block-inserter-between-btn svg {
+    width: 16px;
+    height: 16px;
+    color: white;
+}
+
+/* Mostra ao passar o mouse entre blocos */
+/* Removido - já tratado acima com display:contents */
+
+
+/* Menu rápido de blocos */
+.inserter-quick-menu {
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    margin-top: 8px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+    padding: 8px;
+    min-width: 200px;
+    z-index: 100;
+}
+
+.inserter-quick-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    padding: 10px 12px;
+    background: transparent;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.2s;
+    text-align: left;
+    font-size: 14px;
+    color: #1E1E1E;
+}
+
+.inserter-quick-item:hover {
+    background: #F0F7FA;
+}
+
+.inserter-quick-item svg {
+    width: 20px;
+    height: 20px;
+    color: #007CBA;
+    flex-shrink: 0;
+}
+
+.inserter-quick-item span {
+    flex: 1;
+}
+
+.inserter-quick-divider {
+    height: 1px;
+    background: #E5E7EB;
+    margin: 4px 0;
+}
+
+.inserter-browse-all {
+    font-weight: 600;
+    color: #007CBA;
+}
+
+.inserter-browse-all:hover {
+    background: #E6F3F9;
+}

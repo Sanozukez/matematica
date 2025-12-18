@@ -1,0 +1,84 @@
+﻿/* =============================================================================
+   5. ESTADOS ESPECIAIS
+   ============================================================================= */
+
+/* Empty State */
+.block-editor-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 80px 40px;
+    text-align: center;
+}
+
+.block-editor-empty-icon {
+    width: 64px;
+    height: 64px;
+    color: #DCDCDE;
+    margin-bottom: 24px;
+}
+
+.block-editor-empty-title {
+    font-size: 24px;
+    font-weight: 600;
+    color: #1E1E1E;
+    margin-bottom: 12px;
+}
+
+.block-editor-empty-text {
+    font-size: 16px;
+    color: #757575;
+    margin-bottom: 24px;
+}
+
+/* Loading State */
+.block-editor-loading {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.block-editor-spinner {
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Focus States */
+.block-wrapper:focus-within {
+    outline: none;
+}
+
+/* Scrollbar customizado */
+.block-editor-sidebar-right::-webkit-scrollbar,
+.block-inserter-list-wp::-webkit-scrollbar,
+.block-editor-canvas::-webkit-scrollbar {
+    width: 8px;
+}
+
+.block-editor-sidebar-right::-webkit-scrollbar-track,
+.block-inserter-list-wp::-webkit-scrollbar-track,
+.block-editor-canvas::-webkit-scrollbar-track {
+    background: #F0F0F0;
+}
+
+.block-editor-sidebar-right::-webkit-scrollbar-thumb,
+.block-inserter-list-wp::-webkit-scrollbar-thumb,
+.block-editor-canvas::-webkit-scrollbar-thumb {
+    background: #DCDCDE;
+    border-radius: 4px;
+}
+
+.block-editor-sidebar-right::-webkit-scrollbar-thumb:hover,
+.block-inserter-list-wp::-webkit-scrollbar-thumb:hover,
+.block-editor-canvas::-webkit-scrollbar-thumb:hover {
+    background: #A0A5AA;
+}

@@ -1,3 +1,3 @@
-{{-- plataforma/resources/views/filament/resources/lesson-resource/pages/edit-lesson-fullscreen.blade.php --}}
-
-@include('block-editor-ymkn::editor')
+<div>
+    @include('block-editor-ymnk::editor')
+</div>

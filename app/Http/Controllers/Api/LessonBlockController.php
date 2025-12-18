@@ -32,7 +32,13 @@ class LessonBlockController extends Controller
         
         return response()->json([
             'blocks' => $lesson->content['blocks'] ?? [],
-            'lesson_title' => $lesson->title
+            'lesson_title' => $lesson->title,
+            'lesson' => [
+                'id' => $lesson->id,
+                'title' => $lesson->title,
+                'is_active' => $lesson->is_active,
+                'updated_at' => $lesson->updated_at?->format('d/m/Y H:i')
+            ]
         ]);
     }
     

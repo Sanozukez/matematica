@@ -1,0 +1,151 @@
+﻿/* ============================
+   SLASH COMMANDS MENU
+   ============================ */
+.slash-commands-menu {
+    position: fixed;
+    z-index: 10000;
+    background: white;
+    border: 1px solid #E0E0E0;
+    border-radius: 8px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    min-width: 240px;
+    max-width: 280px;
+    max-height: 300px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.slash-menu-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 16px;
+    background: #F5F5F5;
+    border-bottom: 1px solid #E0E0E0;
+    font-weight: 600;
+    font-size: 13px;
+    color: #333;
+}
+
+.slash-menu-list {
+    overflow-y: auto;
+    max-height: 340px;
+}
+
+.slash-menu-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    width: 100%;
+    text-align: left;
+    border: none;
+    background: white;
+    cursor: pointer;
+    transition: background 0.15s;
+}
+
+.slash-menu-item:hover {
+    background: #E6F3FB;
+}
+
+.slash-menu-item-icon {
+    flex-shrink: 0;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.slash-menu-item-icon svg {
+    width: 32px;
+    height: 32px;
+    color: #666;
+}
+
+.slash-menu-item-content {
+    flex: 1;
+}
+
+.slash-menu-item-label {
+    font-weight: 600;
+    font-size: 14px;
+    color: #333;
+}
+
+.slash-menu-item-desc {
+    font-size: 12px;
+    color: #666;
+}
+
+.slash-menu-empty {
+    padding: 24px;
+    text-align: center;
+    color: #999;
+    font-size: 13px;
+}
+
+/* Selected state for slash menu item */
+.slash-menu-item.is-selected {
+    background: #007CBA;
+    color: #fff;
+}
+
+.slash-menu-item.is-selected .slash-menu-item-label {
+    color: #fff;
+}
+
+.slash-menu-item.is-selected .slash-menu-item-icon svg {
+    color: #fff;
+}
+
+/* ============================
+   BLOCK TRANSFORM MENU
+   ============================ */
+.block-transform-menu {
+    position: fixed;
+    z-index: 10000;
+    background: white;
+    border: 1px solid #E0E0E0;
+    border-radius: 6px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+    min-width: 200px;
+    overflow: hidden;
+}
+
+.transform-menu-header {
+    padding: 10px 14px;
+    background: #F5F5F5;
+    border-bottom: 1px solid #E0E0E0;
+    font-weight: 600;
+    font-size: 12px;
+    color: #666;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.transform-menu-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    width: 100%;
+    text-align: left;
+    border: none;
+    background: white;
+    cursor: pointer;
+    transition: background 0.15s;
+    font-size: 14px;
+    color: #333;
+}
+
+.transform-menu-item:hover {
+    background: #F0F7FA;
+}
+
+.transform-menu-item span:first-child {
+    font-size: 18px;
+}
+

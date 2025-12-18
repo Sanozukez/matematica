@@ -29,7 +29,7 @@
             "App\\": "app/",
             "Database\\Factories\\": "database/factories/",
             "Database\\Seeders\\": "database/seeders/",
-            "Ymkn\\BlockEditor\\": "packages/block-editor-ymkn/block-editor/src/"
+            "Ymnk\\BlockEditor\\": "packages/block-editor-ymnk/block-editor/src/"
         }
     },
     "autoload-dev": {

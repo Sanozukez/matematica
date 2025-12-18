@@ -89,26 +89,41 @@ app/Domain/{Domínio}/
 
 ## Execução de Comandos
 
-### Terminal
-- Sempre executar comandos no terminal (não simular)
-- Usar docker-compose exec para comandos dentro do container
-- Em caso de erro: investigar causa raiz, não usar soluções paliativas
+### Terminal - SEMPRE USAR DOCKER
+- ⚠️ **IMPORTANTE**: Todos os comandos PHP/Artisan/Composer/NPM devem ser executados DENTRO do container Docker
+- **Motivo**: Evita problemas com extensões PHP (fileinfo, etc) e compatibilidade de ambiente
+- Usar `docker compose -f "docker-compose.dev.yml" exec laravel.test [comando]`
+- Em caso de erro: investigar causa raiz, NÃO usar soluções alternativas antes de tentar corrigir da forma correta
 - Aguardar conclusão de comandos antes de prosseguir
 - PowerShell: usar `;` ao invés de `&&` para encadear comandos
 
-### Comandos Frequentes
+### Comandos Frequentes (SEMPRE NO DOCKER)
 ```powershell
 # Artisan dentro do container
-docker-compose exec laravel.test php artisan [comando]
+docker compose -f "docker-compose.dev.yml" exec laravel.test php artisan [comando]
 
 # Composer dentro do container
-docker-compose exec laravel.test composer [comando]
+docker compose -f "docker-compose.dev.yml" exec laravel.test composer [comando]
 
 # NPM dentro do container
-docker-compose exec laravel.test npm [comando]
+docker compose -f "docker-compose.dev.yml" exec laravel.test npm [comando]
+
+# Publicar assets (vendor packages)
+docker compose -f "docker-compose.dev.yml" exec laravel.test php artisan vendor:publish --tag=block-editor-assets --force
 
 # Limpar caches
-docker-compose exec laravel.test php artisan optimize:clear
+docker compose -f "docker-compose.dev.yml" exec laravel.test php artisan optimize:clear
+docker compose -f "docker-compose.dev.yml" exec laravel.test php artisan view:clear
+docker compose -f "docker-compose.dev.yml" exec laravel.test php artisan config:clear
+```
+
+### ❌ NÃO FAZER (comandos fora do Docker)
+```powershell
+# ERRADO - vai dar erro de extensões PHP
+php artisan vendor:publish
+
+# CORRETO - sempre no container
+docker compose -f "docker-compose.dev.yml" exec laravel.test php artisan vendor:publish
 ```
 
 ---

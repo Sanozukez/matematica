@@ -124,6 +124,13 @@ docker compose up -d --build
 
 **DEPOIS DA PRIMEIRA VEZ:** Use apenas `docker compose up -d` (sem `--build`).
 
+**Após a primeira execução, publique os assets do Livewire:**
+
+```powershell
+docker compose exec laravel.test php artisan livewire:publish --assets
+docker compose exec laravel.test php artisan filament:assets
+```
+
 ---
 
 ## Comando Principal
@@ -408,7 +415,22 @@ docker compose up -d
 # Aguarde 30 segundos e tente novamente
 ```
 
-**2. Container subiu mas sem servidor web (você rodou `docker compose build` por engano):**
+**2. Assets do Livewire não estão publicados:**
+
+**SINTOMAS:**
+- Página de login carrega normalmente
+- Ao clicar em "Entrar" dá erro 405 (Method Not Allowed)
+- Console do navegador mostra erro "Invalid or unexpected token"
+
+**SOLUÇÃO:**
+```powershell
+# Publique os assets do Livewire
+docker compose exec laravel.test php artisan livewire:publish --assets
+
+# Limpe o cache do navegador (Ctrl+Shift+R) e tente novamente
+```
+
+**3. Container subiu mas sem servidor web (você rodou `docker compose build` por engano):**
 
 **SINTOMAS:**
 - `docker compose ps` mostra "Up"
