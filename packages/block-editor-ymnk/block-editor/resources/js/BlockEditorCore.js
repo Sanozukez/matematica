@@ -83,12 +83,7 @@ window.BlockEditorCore = function() {
             
             // Carrega blocos salvos (se existir)
             this.loadBlocks();
-            
-            // Inicializa history com o estado inicial
-            this.$nextTick(() => {
-                window.HistoryManager.save(this.blocks);
-                this.updateHistoryState();
-            });
+            // History será inicializado após loadBlocks para evitar duplicação
             
             // Listeners de teclado para Undo/Redo
             document.addEventListener('keydown', (e) => {
@@ -423,6 +418,14 @@ window.BlockEditorCore = function() {
                 this.lessonTitle = data.lessonTitle;
                 this.lesson = data.lesson; // Guarda dados completos
                 this.hasChanges = false;
+                
+                // Limpa histórico ao carregar para evitar undo removendo blocos carregados
+                window.HistoryManager.clear();
+                // Salva estado inicial carregado como base
+                this.$nextTick(() => {
+                    window.HistoryManager.save(this.blocks);
+                    this.updateHistoryState();
+                });
             }
         },
         

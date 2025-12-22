@@ -20,8 +20,6 @@
         x-show="showQuickMenu"
         x-transition
         @click.outside="showQuickMenu = false"
-        @mouseenter="showQuickMenu = true"
-        @mouseleave="showQuickMenu = false"
         class="inserter-quick-menu"
     >
         <button @click.stop="addBlock('paragraph', index + 1); showQuickMenu = false" class="inserter-quick-item">
