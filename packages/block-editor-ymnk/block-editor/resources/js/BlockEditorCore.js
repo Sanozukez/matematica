@@ -598,12 +598,22 @@ window.BlockEditorCore = function() {
          * Handle blur em contenteditable - salva histórico imediatamente
          */
         handleContentBlur(event, blockId) {
+            const element = event.target;
+            
+            // Força atualização final do conteúdo antes de salvar histórico
+            this.updateBlockContent(blockId, element.innerHTML);
+            
             // Cancela o debounce pendente e salva imediatamente
             if (this._historyDebouncer) {
                 this._historyDebouncer.clear();
             }
-            console.log('💾 Blur detectado - salvando histórico imediatamente');
-            this.saveToHistory();
+            
+            // Aguarda nextTick para garantir que o estado foi atualizado
+            this.$nextTick(() => {
+                console.log('💾 Blur detectado - salvando histórico imediatamente');
+                console.log('Bloco ID:', blockId, 'Content:', this.blocks.find(b => b.id === blockId)?.content?.substring(0, 50));
+                this.saveToHistory();
+            });
         },
         
         /**
@@ -961,6 +971,11 @@ window.BlockEditorCore = function() {
                 this.blocks = previousState;
                 this.updateHistoryState();
                 this.focusedBlockId = null;
+                
+                // Força re-renderização dos contenteditables com o novo estado
+                this.$nextTick(() => {
+                    this.syncDOMWithBlocks();
+                });
             } else {
                 console.log('❌ Nenhum estado anterior disponível');
             }
@@ -970,12 +985,44 @@ window.BlockEditorCore = function() {
          * Faz redo
          */
         redo() {
+            console.log('⏩ Executando REDO');
             const nextState = window.HistoryManager.redo();
             if (nextState) {
+                console.log('✅ Próximo estado recuperado:', nextState.length, 'blocos');
                 this.blocks = nextState;
                 this.updateHistoryState();
                 this.focusedBlockId = null;
+                
+                // Força re-renderização dos contenteditables com o novo estado
+                this.$nextTick(() => {
+                    this.syncDOMWithBlocks();
+                });
+            } else {
+                console.log('❌ Nenhum estado seguinte disponível');
             }
+        },
+        
+        /**
+         * Sincroniza o DOM (contenteditables) com o estado dos blocos
+         * Usado após undo/redo para forçar atualização visual
+         */
+        syncDOMWithBlocks() {
+            console.log('🔄 Sincronizando DOM com estado dos blocos');
+            this.blocks.forEach(block => {
+                const element = document.querySelector(`[data-block-id="${block.id}"]`);
+                if (element) {
+                    const editable = element.querySelector('[contenteditable="true"]');
+                    if (editable && block.content !== undefined) {
+                        // Atualiza o HTML do contenteditable com o conteúdo do estado
+                        if (block.type === 'code') {
+                            editable.textContent = block.content || '';
+                        } else {
+                            editable.innerHTML = block.content || '';
+                        }
+                        console.log(`  ✓ Atualizado bloco ${block.id.substring(0, 20)}:`, block.content?.substring(0, 30));
+                    }
+                }
+            });
         },
 
         /**
@@ -990,7 +1037,15 @@ window.BlockEditorCore = function() {
          * Salva estado atual no histórico (deve ser chamado após cada mudança)
          */
         saveToHistory() {
+            // Log detalhado do que está sendo salvo
             console.log('📝 Salvando no histórico:', this.blocks.length, 'blocos');
+            this.blocks.forEach((block, idx) => {
+                const preview = typeof block.content === 'string' 
+                    ? block.content.substring(0, 30).replace(/<[^>]*>/g, '')
+                    : JSON.stringify(block.content);
+                console.log(`  [${idx}] ${block.type}: "${preview}..."`);
+            });
+            
             window.HistoryManager.save(this.blocks);
             this.updateHistoryState();
         }
