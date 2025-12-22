@@ -486,14 +486,15 @@ window.BlockEditorCore = function() {
         },
         
         /**
-         * Debounce para salvar no histórico (500ms após parar de editar)
+         * Debounce para salvar no histórico (2s após parar de editar)
+         * Blur irá salvar imediatamente, isso é apenas fallback
          */
         debouncedHistorySave() {
             if (this._historyDebouncer) {
                 this._historyDebouncer.debounce(() => {
-                    console.log('💾 Salvando estado no histórico após edição');
+                    console.log('💾 Salvando estado no histórico após timeout');
                     this.saveToHistory();
-                }, 500);
+                }, 2000);
             }
         },
         
@@ -579,7 +580,7 @@ window.BlockEditorCore = function() {
             // Atualiza conteúdo do bloco
             this.updateBlockContent(blockId, element.innerHTML);
             
-            // Salva no histórico com debounce (500ms após parar de digitar)
+            // Salva no histórico com debounce longo (2s) apenas como fallback
             this.debouncedHistorySave();
             
             // Verifica se deve mostrar menu de comandos slash
@@ -591,6 +592,18 @@ window.BlockEditorCore = function() {
             }
             
             this.debouncedSave();
+        },
+        
+        /**
+         * Handle blur em contenteditable - salva histórico imediatamente
+         */
+        handleContentBlur(event, blockId) {
+            // Cancela o debounce pendente e salva imediatamente
+            if (this._historyDebouncer) {
+                this._historyDebouncer.clear();
+            }
+            console.log('💾 Blur detectado - salvando histórico imediatamente');
+            this.saveToHistory();
         },
         
         /**

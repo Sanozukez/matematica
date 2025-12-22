@@ -86,14 +86,14 @@ class LessonBlockController extends Controller
             'blocks' => 'required|array',
             'blocks.*.id' => 'required|string',
             'blocks.*.type' => 'required|string|in:paragraph,heading,image,video,code,quote,alert,list,latex,divider,table,columns',
-            'blocks.*.content' => 'nullable|string',
-            'blocks.*.attributes' => 'nullable|array',
-            'blocks.*.attributes.columns' => 'nullable|array',
-            'blocks.*.attributes.columns.*.blocks' => 'nullable|array',
-            'blocks.*.attributes.columns.*.blocks.*.id' => 'nullable|string',
-            'blocks.*.attributes.columns.*.blocks.*.type' => 'nullable|string|in:paragraph,heading,image,video,code,quote,alert,list,latex,divider,table',
-            'blocks.*.attributes.columns.*.blocks.*.content' => 'nullable|string',
-            'blocks.*.attributes.columns.*.blocks.*.attributes' => 'nullable|array',
+            'blocks.*.content' => 'present', // Permite string, null, ou vazio
+            'blocks.*.attributes' => 'present|array', // Sempre array, pode ser vazio
+            'blocks.*.attributes.columns' => 'sometimes|array',
+            'blocks.*.attributes.columns.*.blocks' => 'sometimes|array',
+            'blocks.*.attributes.columns.*.blocks.*.id' => 'sometimes|string',
+            'blocks.*.attributes.columns.*.blocks.*.type' => 'sometimes|string|in:paragraph,heading,image,video,code,quote,alert,list,latex,divider,table',
+            'blocks.*.attributes.columns.*.blocks.*.content' => 'present',
+            'blocks.*.attributes.columns.*.blocks.*.attributes' => 'present|array',
             'lesson_title' => 'nullable|string|max:255',
         ]);
         

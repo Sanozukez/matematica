@@ -17,6 +17,7 @@
             class="block-paragraph"
             contenteditable="true"
             @input="handleContentInput($event, block.id)"
+            @blur="handleContentBlur($event, block.id)"
             @keydown.enter="handleEnter($event, block.id)"
             @keydown.up.prevent="navigateSlashMenu('up', block.id)"
             @keydown.down.prevent="navigateSlashMenu('down', block.id)"
