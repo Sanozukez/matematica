@@ -80,6 +80,8 @@ window.BlockEditorCore = function() {
             
             // Cria debouncer
             this._autoSaveDebouncer = window.StateManager.createDebouncer();
+            // Debouncer separado para histórico (delay curto para capturar edições)
+            this._historyDebouncer = window.StateManager.createDebouncer();
             
             // Carrega blocos salvos (se existir)
             this.loadBlocks();
@@ -174,6 +176,7 @@ window.BlockEditorCore = function() {
          */
         updateBlockAttributes(blockId, attributes) {
             window.BlockManager.updateBlockAttributes(this.blocks, blockId, attributes);
+            this.saveToHistory();
         },
         
         /**
@@ -479,6 +482,17 @@ window.BlockEditorCore = function() {
         },
         
         /**
+         * Debounce para salvar no histórico (500ms após parar de editar)
+         */
+        debouncedHistorySave() {
+            if (this._historyDebouncer) {
+                this._historyDebouncer.debounce(() => {
+                    this.saveToHistory();
+                }, 500);
+            }
+        },
+        
+        /**
          * Salva blocos imediatamente (botão Save)
          */
         async save() {
@@ -559,6 +573,9 @@ window.BlockEditorCore = function() {
             
             // Atualiza conteúdo do bloco
             this.updateBlockContent(blockId, element.innerHTML);
+            
+            // Salva no histórico com debounce (500ms após parar de digitar)
+            this.debouncedHistorySave();
             
             // Verifica se deve mostrar menu de comandos slash
             if (window.SlashCommands && window.SlashCommands.shouldShowMenu(text)) {
