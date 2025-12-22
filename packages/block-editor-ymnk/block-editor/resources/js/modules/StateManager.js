@@ -108,8 +108,10 @@ window.StateManager = {
                 console.log('✅ Salvamento bem-sucedido');
                 return { success: true };
             } else {
+                const errorData = await response.json().catch(() => null);
                 console.error('❌ Erro ao salvar, status:', response.status);
-                return { success: false, error: 'server-error', status: response.status };
+                console.error('Detalhes do erro:', errorData);
+                return { success: false, error: 'server-error', status: response.status, details: errorData };
             }
         } catch (error) {
             console.error('Erro ao salvar:', error);

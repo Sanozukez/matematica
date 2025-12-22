@@ -117,8 +117,11 @@ window.BlockEditorCore = function() {
         addBlock(type = 'paragraph', afterIndex = null) {
             const newBlock = window.BlockManager.addBlock(this.blocks, type, afterIndex);
             
-            // Salva no histórico
-            this.saveToHistory();
+            // Salva no histórico IMEDIATAMENTE (antes de qualquer edição)
+            // Isso garante que o undo de uma edição não remova o bloco inteiro
+            this.$nextTick(() => {
+                this.saveToHistory();
+            });
             
             // Foca no novo bloco após renderização
             this.$nextTick(() => {
@@ -424,8 +427,9 @@ window.BlockEditorCore = function() {
                 
                 // Limpa histórico ao carregar para evitar undo removendo blocos carregados
                 window.HistoryManager.clear();
-                // Salva estado inicial carregado como base
+                // Salva estado inicial carregado como base (sem undo disponível)
                 this.$nextTick(() => {
+                    console.log('📂 Estado inicial carregado:', this.blocks.length, 'blocos');
                     window.HistoryManager.save(this.blocks);
                     this.updateHistoryState();
                 });
@@ -487,6 +491,7 @@ window.BlockEditorCore = function() {
         debouncedHistorySave() {
             if (this._historyDebouncer) {
                 this._historyDebouncer.debounce(() => {
+                    console.log('💾 Salvando estado no histórico após edição');
                     this.saveToHistory();
                 }, 500);
             }
@@ -936,11 +941,15 @@ window.BlockEditorCore = function() {
          * Faz undo
          */
         undo() {
+            console.log('⏪ Executando UNDO');
             const previousState = window.HistoryManager.undo();
             if (previousState) {
+                console.log('✅ Estado anterior recuperado:', previousState.length, 'blocos');
                 this.blocks = previousState;
                 this.updateHistoryState();
                 this.focusedBlockId = null;
+            } else {
+                console.log('❌ Nenhum estado anterior disponível');
             }
         },
 
@@ -968,6 +977,7 @@ window.BlockEditorCore = function() {
          * Salva estado atual no histórico (deve ser chamado após cada mudança)
          */
         saveToHistory() {
+            console.log('📝 Salvando no histórico:', this.blocks.length, 'blocos');
             window.HistoryManager.save(this.blocks);
             this.updateHistoryState();
         }

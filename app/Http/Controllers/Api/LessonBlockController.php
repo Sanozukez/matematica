@@ -81,7 +81,7 @@ class LessonBlockController extends Controller
      */
     public function store(Request $request, Lesson $lesson): JsonResponse
     {
-        // Validação simplificada (order não é mais necessário)
+        // Validação completa incluindo blocos internos de colunas
         $validator = Validator::make($request->all(), [
             'blocks' => 'required|array',
             'blocks.*.id' => 'required|string',
@@ -90,10 +90,19 @@ class LessonBlockController extends Controller
             'blocks.*.attributes' => 'nullable|array',
             'blocks.*.attributes.columns' => 'nullable|array',
             'blocks.*.attributes.columns.*.blocks' => 'nullable|array',
+            'blocks.*.attributes.columns.*.blocks.*.id' => 'nullable|string',
+            'blocks.*.attributes.columns.*.blocks.*.type' => 'nullable|string|in:paragraph,heading,image,video,code,quote,alert,list,latex,divider,table',
+            'blocks.*.attributes.columns.*.blocks.*.content' => 'nullable|string',
+            'blocks.*.attributes.columns.*.blocks.*.attributes' => 'nullable|array',
             'lesson_title' => 'nullable|string|max:255',
         ]);
         
         if ($validator->fails()) {
+            \Log::error('Validação de blocos falhou', [
+                'errors' => $validator->errors()->toArray(),
+                'blocks_count' => count($request->input('blocks', [])),
+            ]);
+            
             return response()->json([
                 'message' => 'Dados inválidos',
                 'errors' => $validator->errors()
