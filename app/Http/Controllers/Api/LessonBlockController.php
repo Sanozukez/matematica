@@ -63,11 +63,19 @@ class LessonBlockController extends Controller
             if ($block['type'] === 'columns' && isset($block['attributes']['columns'])) {
                 foreach ($block['attributes']['columns'] as $col) {
                     foreach ($col['blocks'] ?? [] as $innerBlock) {
-                        $count += str_word_count(strip_tags($innerBlock['content'] ?? ''));
+                        $content = $innerBlock['content'] ?? '';
+                        // Garante que content é string
+                        if (is_string($content)) {
+                            $count += str_word_count(strip_tags($content));
+                        }
                     }
                 }
             } else {
-                $count += str_word_count(strip_tags($block['content'] ?? ''));
+                $content = $block['content'] ?? '';
+                // Garante que content é string
+                if (is_string($content)) {
+                    $count += str_word_count(strip_tags($content));
+                }
             }
         }
         
